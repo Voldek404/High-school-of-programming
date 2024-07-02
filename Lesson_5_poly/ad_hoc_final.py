@@ -1,17 +1,18 @@
-class Integer:
-    def __init__(self, content):
-        self.content = content
+class Animal:
+    def speak(self):
+        pass
 
-    def ad_hoc(self):
-        return self.content/2
-class List:
-    def __init__(self, content):
-        self.content = content
+class Dog(Animal):
+    def speak(self):
+        return "Гав-гав!"
 
-    def ad_hoc(self):
-        return self.content*2
+class Cat(Animal):
+    def speak(self):
+        return "Мяу-мяу!"
 
-integer = Integer(2)
-list = List(['2'])
-print(integer.ad_hoc())
-print(list.ad_hoc())
+animal = Animal()  # Создаём объект базового класса
+dog = Dog()  # Создаём объект дочернего класса
+cat = Cat()  # Создаём ещё один объект дочернего класса
+
+for animal in [dog, cat]: #цикл для неявного вызова метода
+    print(animal.speak())
