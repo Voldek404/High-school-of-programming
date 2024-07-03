@@ -4,21 +4,19 @@ class Object:
 
 
 class Digit(Object):
-    def operation(self):
-        return self.content / 2
+    pass
 
 
 class String(Object):
-    def operation(self):
-        return self.content * 2
+    pass
 
 
 def print_object_result(object):
-    return object.operation()
+    return object.content * 2
 
 
-object = Digit(2)  
-print(print_object_result(object))  # Выведет «1»
+object = Digit(2)  # Создаём объект дочернего класса
+print(print_object_result(object))  # Выведет «4»
 
-object = String('2') 
+object = String('2')  # Создаём ещё один объект дочернего класса
 print(print_object_result(object))  # Выведет «22»
