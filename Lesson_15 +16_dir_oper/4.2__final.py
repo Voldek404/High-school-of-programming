@@ -7,4 +7,4 @@ def del_dir(path):
         os.remove(os.path.join(path,f))
     os.rmdir(path)
     return True
-print(del_dir('test_dir'))
+print(del_dir(path))
