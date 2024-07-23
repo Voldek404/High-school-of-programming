@@ -1,10 +1,15 @@
 import os
-from dir_oper import get_list
+from dir_oper_2 import get_list
+
 
 def del_dir(path):
-    res = get_list(path, extention, False)
+    res = get_list(path, extention=".*", flag=False)
+    if len(res[1]) > 0: # проверка на вложенные каталоги
+        return False
     for f in res[0]:
-        os.remove(os.path.join(path,f))
-    os.rmdir(path)
+        os.remove(path)  # перебор и удаление вложенных файлов
+    os.rmdir(path)  # удаление пустого каталога
     return True
+
+path = 'test_dir'  # определение расположения исходного каталога для работы функции
 print(del_dir(path))
