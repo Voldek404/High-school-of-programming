@@ -11,7 +11,7 @@ def get_repeated_values(list_of_values, min_repeat):
 
     result = []
     for key, value in count_dict.items():  # сравниваем число повторений с заданным числом N
-        if value >= min_repeat:
+        if value == min_repeat:
             result.append(key)
     return result
 
