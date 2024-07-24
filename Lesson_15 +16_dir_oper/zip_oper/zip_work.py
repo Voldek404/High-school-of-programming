@@ -1,20 +1,19 @@
 from zipfile import ZipFile
+from dir_oper_2 import get_list
 import os
 
 
 def zip_insert(name, extension):
-    if len(os.listdir(os.getcwd())) == 0: # проверка на пустой каталог
-        print("Directory is empty")
-    else:
-        print("Directory is not empty")
-    with ZipFile(name, 'w') as testzip: # создание рабочего архива
-        for root, dirs, files in os.walk(os.getcwd()):
-            for file in files:
-                if file.endswith(extension): #Внесение в архив файлов по признаку расширения
-                    testzip.write(os.path.join(root, file))
+    res = get_list(path, extension, False)
+    if len(res[0]) == 0:  # check whether the directory is empty
+        return None
+    with ZipFile(name, 'w') as testzip:  # creating zip file
+        for f in res[0]:
+            testzip.write(f)
     return testzip.filename
 
 
+path = os.getcwd()
 name = 'test.zip'
-extension = '.odg'
+extension = '.ods'
 print(zip_insert(name, extension))
