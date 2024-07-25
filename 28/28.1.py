@@ -1,15 +1,10 @@
-def squirell(num):
+def int_squirrel(int_N):
     factorial = 1
-    for i in range(1, num + 1):
+    for i in range(1, int_N + 1):
         factorial *= i  # calculating factorial
     first_digit = factorial // 10 ** (len(str(factorial)) - 1)  # dividing factorial
     return first_digit
 
 
-try:
-    num = int(input('Vvedite N - '))
-    if num < 0 or num is float:
-        raise ValueError("A number must be positive")
-except ValueError as error:
-    print("Ошибка:", error)
-print(squirell(num))
+int_N = int(input('Vvedite N - '))
+print(int_squirrel(int_N))
