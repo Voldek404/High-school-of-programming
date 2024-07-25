@@ -6,6 +6,4 @@ def squirrel(N):
     return first_digit
 
 
-N = 5
-print(squirrel(N))
 
