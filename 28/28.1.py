@@ -6,5 +6,6 @@ def int_squirrel(int_N):
     return first_digit
 
 
-int_N = int(input('Vvedite N - '))
+int_N = 5
 print(int_squirrel(int_N))
+
