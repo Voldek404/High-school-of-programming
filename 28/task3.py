@@ -24,7 +24,7 @@ def ConquestCampaign(N, M, L, battalion):
         covered = False
 
         for i in range(N):
-            for j in range(M): #set moving to new points and paint it according to day number
+            for j in range(M):
                 if training_space[i][j] == day:
                     if i > 0 and training_space[i - 1][j] == 0:
                         training_space[i - 1][j] = day + 1
@@ -44,3 +44,4 @@ def ConquestCampaign(N, M, L, battalion):
 
         day += 1
 
+    return day
