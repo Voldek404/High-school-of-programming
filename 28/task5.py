@@ -4,9 +4,9 @@ def SynchronizingTables(N, ids, salary):
     salary_sorted = sorted(salary)
     salary_new = []
 
-    for j in sorted_indices_ids:
-        for i in sorted_indices_salary:
-            if i == j:
-                salary_new.append(salary_sorted[j])
+    for i in range(0,N):
+        for j in range(0,N):
+            if sorted_indices_ids[i] == sorted_indices_salary[j]:
+                salary_new.append(salary[i-1])
 
     return salary_new
