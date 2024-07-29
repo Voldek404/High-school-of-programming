@@ -9,7 +9,6 @@ def PatternUnlock(N, hits):
         else:
             hits_sum += 1
     hits_sum = round(hits_sum, 5)
-    print(hits_sum)
     for i in str(hits_sum):
         res_hits_sum = str(hits_sum).replace('.', '')
         if i == 0:
