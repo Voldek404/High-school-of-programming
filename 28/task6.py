@@ -1,7 +1,7 @@
 def PatternUnlock(N, hits):
     hits_sum = 0
     for i in range(N):
-        if i + 1 >= N:
+        if i + 1 == N:
             break
         if abs(hits[i] - hits[i + 1]) == 4 or abs(hits[i] - hits[i + 1]) == 2 or abs(hits[i] - hits[i + 1]) == 7 or abs(
                 hits[i] - hits[i + 1]) == 5:
