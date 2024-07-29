@@ -16,7 +16,7 @@ def PatternUnlock(N, hits):
             hits_sum = str(hits_sum).replace('.', '')
         elif i == '0':
             hits_sum = str(hits_sum).replace('0', '')
-    return hits_sum
+    return str(hits_sum)
 
 
 
