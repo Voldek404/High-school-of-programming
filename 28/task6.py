@@ -10,10 +10,13 @@ def PatternUnlock(N, hits):
             hits_sum += 1
     hits_sum = round(hits_sum, 5)
     for i in str(hits_sum):
-        res_hits_sum = str(hits_sum).replace('.', '')
-        if i == 0:
-            res_hits_sum = str(hits_sum).replace('0', '')
-    return res_hits_sum
+        if i == '.':
+            hits_sum = str(hits_sum).replace('.', '')
+        elif i == '0':
+            hits_sum = str(hits_sum).replace('0', '')
+    return hits_sum
+
+
 
 
 
