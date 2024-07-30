@@ -3,4 +3,5 @@ def SumOfThe(N,  data):
         data_raw = data[:]
         data_raw.remove(i)
         if i == sum(data_raw):
-            return i
+            break
+    return i
