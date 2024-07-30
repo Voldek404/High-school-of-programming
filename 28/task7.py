@@ -55,10 +55,10 @@ def WordSearch(length, input_string, subs):
             search_list.append(splitted_string[0] + ' ' * (
                     length - len(splitted_string[0])))
             splitted_string.pop(0)
-    result_string = ''
+    result_array = []
     for rows in search_list:
         if subs in rows.split():
-            result_string += '1'
+            result_array.append('1')
         else:
-            result_string += '0'
-    return result_string
+            result_array.append('0')
+    return result_array
