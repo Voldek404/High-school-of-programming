@@ -15,7 +15,7 @@ def WordSearch(length, input_string, subs):
             splitted_string.pop(0)
             break
         elif len(splitted_string) == 1 and len(splitted_string[0]) > length:
-            search_list.append(splitted_string[0][:length - 1])
+            search_list.append(splitted_string[0][:length ])
             splitted_string[0] = splitted_string[0][length:]
             search_list.append(splitted_string[0][:length - 1] + ' ' * (
                     length - len(splitted_string[0])))
@@ -24,7 +24,7 @@ def WordSearch(length, input_string, subs):
             search_list.append(splitted_string[0] + ' ' + splitted_string[1] + ' ' * (
                     length - len(splitted_string[0] + splitted_string[1] + ' ')))
             splitted_string.pop(0)
-            splitted_string.pop
+            splitted_string.pop(0)
         elif len(splitted_string[0]) < length and len(splitted_string[0] + splitted_string[1]) > length:
             search_list.append(splitted_string[0] + ' ' * (
                     length - len(splitted_string[0])))
@@ -62,4 +62,3 @@ def WordSearch(length, input_string, subs):
         else:
             result_string += '0'
     return result_string
-
