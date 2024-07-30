@@ -58,7 +58,7 @@ def WordSearch(length, input_string, subs):
     result_array = []
     for rows in search_list:
         if subs in rows.split():
-            result_array.append('1')
+            result_array.append(1)
         else:
-            result_array.append('0')
+            result_array.append(0)
     return result_array
