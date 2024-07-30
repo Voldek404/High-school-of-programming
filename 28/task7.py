@@ -53,5 +53,4 @@ def WordSearch(length, input_string, subs):
             result_string += '1'
         else:
             result_string += '0'
-        print(rows)
     return result_string
