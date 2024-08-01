@@ -5,7 +5,9 @@ def BigMinus(string_1, string_2):
     string_1 = list(string_1)
     string_2 = list(string_2)
     result = ''
-    if len(string_1) == len(string_2) == 1:
+    if string_1 == string_2:
+        result = '0'
+    elif len(string_1) == len(string_2) == 1:
         result = str(abs(int(string_1[0]) - int(string_2[0])))
     else:
         borrow = 0
@@ -21,7 +23,7 @@ def BigMinus(string_1, string_2):
 
             result = str(diff) + result
 
-    result = result.lstrip('0')
-    return str(result)
+        result = result.lstrip('0')
+    return result
 
 
