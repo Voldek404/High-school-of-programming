@@ -6,7 +6,7 @@ def MassVote(candidates_number, votes_array):
     for i in range(0, candidates_number):
         if max_value == votes_array[i]:
             max_number += 1
-    if max_number >= 2:
+    if max_number > 1:
         result = "no winner"
     elif max_share > 50:
         result = f"majority winner {votes_array.index(max_value) + 1}"
