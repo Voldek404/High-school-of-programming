@@ -1,4 +1,4 @@
-def MaximumDiscount(N, price):
+def MaximumDiscount(N: int, price: list[int]) -> int:
     money_savings = 0
     raw_price = sorted(price, reverse=True)
     if N > 3:
