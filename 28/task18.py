@@ -8,7 +8,7 @@ def MisterRobot(N: int, data: list) -> bool:
             while data[j] > data[j + 1] or data[j + 1] > data[j + 2]:
                 if data[j] > data[j + 1] or data[j + 1] > data[j + 2]:
                     data[j], data[j + 1], data[j + 2] = data[j + 1], data[j + 2], data[j]
-    return data == list_2))
+    return data == list_2
 
 
 
