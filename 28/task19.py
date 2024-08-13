@@ -1,4 +1,4 @@
-def ShopOLAP(N: int, items):
+def ShopOLAP(N: int, items: list[str]) -> list[str]:
     list_2 = []
     duplicates = []
     for j in range(0, N):
@@ -9,10 +9,13 @@ def ShopOLAP(N: int, items):
             if flat_list[i] == flat_list[k]:
                 flat_list[i + 1] = int(flat_list[i + 1]) + int(flat_list[k + 1])
                 duplicates.append(k)
-                duplicates.append(k+1)
+                duplicates.append(k + 1)
     for index in sorted(duplicates, reverse=True):
         flat_list.pop(index)
     dict_from_list = {flat_list[i]: int(flat_list[i + 1]) for i in range(0, len(flat_list), 2)}
-    sorted_dict = dict(sorted(dict_from_list.items(), key=lambda item: item[0]))
+    sorted_dict = dict(sorted(dict_from_list.items(), key=lambda item: item[1], reverse=True))
+    has_duplicates = len(dict_from_list.values()) != len(set(dict_from_list.values()))
     result = [f"{key} {value}" for key, value in sorted_dict.items()]
+    if has_duplicates:
+        result = sorted(result)
     return result
