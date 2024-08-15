@@ -6,7 +6,7 @@ def Add(string_command):
     global current_string, undo_stack, redo_stack
     string_command = string_command[1:].lstrip()
     undo_stack.append(current_string)
-    current_string += string_command
+    current_string += string_command.rstrip
     redo_stack.clear()
     return current_string
 
