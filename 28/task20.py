@@ -24,8 +24,9 @@ def Delete(string_command):
 def Print_index(string_command):
     global current_string
     N = int(string_command[1:])
+    index = current_string[N]
     if 0 <= N < len(current_string):
-        return current_string[N]
+        return index
     else:
         return ""
 
@@ -46,17 +47,14 @@ def Redo():
 def BastShoe(string_command) -> str:
     command_num = int(string_command[0])
     if command_num == 1:
-        Add(string_command)
+        return  Add(string_command)
     elif command_num == 2:
-        Delete(string_command)
+        return Delete(string_command)
     elif command_num == 3:
-        Print_index(string_command)
+        return Print_index(string_command)
     elif command_num == 4:
-        Undo()
+        return Undo()
     elif command_num == 5:
-        Redo()
+        return Redo()
     else:
         return current_string
-    return current_string
-
-
