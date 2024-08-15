@@ -24,9 +24,8 @@ def Delete(string_command):
 def Print_index(string_command):
     global current_string
     N = int(string_command[1:])
-    index = current_string[N]
     if 0 <= N < len(current_string):
-        return index
+        return current_string[N]
     else:
         return ""
 
