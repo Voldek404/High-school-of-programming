@@ -1,59 +1,60 @@
 current_string = ""
-undo_stack = []
+undo_stack = [current_string]
 redo_stack = []
+last_action = 0
 
 def Add(string_command):
-    global current_string, undo_stack, redo_stack
-    string_command = string_command[1:].lstrip()
+    global current_string, undo_stack, redo_stack, last_action
+    if last_action in (4, 5):
+        undo_stack = [current_string]
+        redo_stack = []
+    current_string += string_command[2:]
     undo_stack.append(current_string)
-    current_string += string_command.rstrip
-    redo_stack.clear()
+    last_action = 12
     return current_string
 
 def Delete(string_command):
-    global current_string, undo_stack, redo_stack
-    N = int(string_command[1:])
+    global current_string, undo_stack, redo_stack, last_action
+    if last_action in (4, 5):
+        undo_stack = [current_string]
+        redo_stack = []
+    delete_count = int(string_command[2:])
+    current_string = current_string[:-delete_count] if delete_count <= len(current_string) else ''
     undo_stack.append(current_string)
-    if N > len(current_string):
-        current_string = ""
-    else:
-        current_string = current_string[:-N]
-    redo_stack.clear()
+    last_action = 12
     return current_string
 
 def Print_index(string_command):
-    global current_string
-    N = int(string_command[1:])
-    if 0 <= N < len(current_string):
-        return current_string[N]
-    else:
-        return ""
+    index = int(string_command[2:])
+    return current_string[index] if 0 <= index < len(current_string) else ''
 
 def Undo():
-    global current_string, undo_stack, redo_stack
-    if undo_stack:
+    global current_string, undo_stack, redo_stack, last_action
+    if len(undo_stack) > 1:
         redo_stack.append(current_string)
-        current_string = undo_stack.pop()
+        undo_stack.pop()
+        current_string = undo_stack[-1]
+    last_action = 4
     return current_string
 
 def Redo():
-    global current_string, undo_stack, redo_stack
+    global current_string, undo_stack, redo_stack, last_action
     if redo_stack:
-        undo_stack.append(current_string)
         current_string = redo_stack.pop()
+        undo_stack.append(current_string)
+    last_action = 5
     return current_string
 
 def BastShoe(string_command) -> str:
-    command_num = int(string_command[0])
-    if command_num == 1:
-        return  Add(string_command)
-    elif command_num == 2:
+    if string_command.startswith('1'):
+        return Add(string_command)
+    elif string_command.startswith('2'):
         return Delete(string_command)
-    elif command_num == 3:
+    elif string_command.startswith('3'):
         return Print_index(string_command)
-    elif command_num == 4:
+    elif string_command.startswith('4'):
         return Undo()
-    elif command_num == 5:
+    elif string_command.startswith('5'):
         return Redo()
     else:
         return current_string
