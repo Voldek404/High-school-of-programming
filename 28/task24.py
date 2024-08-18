@@ -1,15 +1,61 @@
 def MatrixTurn(Matrix, M, N, T):
-    rows = len(Matrix)
-    cols = len(Matrix[0])
-    result = [[0] * cols for _ in range(rows)]
-    for i in range(1, cols):
-        result[0][i] = Matrix[0][i - 1]
-    for i in range(1, rows):
-        result[i][cols - 1] = Matrix[i - 1][cols - 1]
-    for i in range(cols - 1):
-        result[rows - 1][i] = Matrix[rows - 1][i + 1]
-    for i in range(rows - 1):
-        result[i][0] = Matrix[i + 1][0]
-    for i in range(rows):
-        for j in range(cols):
-            Matrix[i][j] = result[i][j]
+    def get_layer(Matrix, layer):
+        rows, cols = len(Matrix), len(Matrix[0])
+        top_row = layer
+        bottom_row = rows - layer - 1
+        left_col = layer
+        right_col = cols - layer - 1
+
+
+        layer_elements = []
+
+        for col in range(left_col, right_col + 1):
+            layer_elements.append(Matrix[top_row][col])
+
+        for row in range(top_row + 1, bottom_row + 1):
+            layer_elements.append(Matrix[row][right_col])
+
+        for col in range(right_col - 1, left_col - 1, -1):
+            layer_elements.append(Matrix[bottom_row][col])
+
+        for row in range(bottom_row - 1, top_row, -1):
+            layer_elements.append(Matrix[row][left_col])
+
+        return layer_elements
+
+    def set_layer(Matrix, layer, elements):
+        rows, cols = len(Matrix), len(Matrix[0])
+        top_row = layer
+        bottom_row = rows - layer - 1
+        left_col = layer
+        right_col = cols - layer - 1
+
+        index = 0
+
+        for col in range(left_col, right_col + 1):
+            Matrix[top_row][col] = elements[index]
+            index += 1
+
+        for row in range(top_row + 1, bottom_row + 1):
+            Matrix[row][right_col] = elements[index]
+            index += 1
+
+        for col in range(right_col - 1, left_col - 1, -1):
+            Matrix[bottom_row][col] = elements[index]
+            index += 1
+
+        for row in range(bottom_row - 1, top_row, -1):
+            Matrix[row][left_col] = elements[index]
+            index += 1
+
+    Matrix = [list(row) for row in Matrix]
+
+    num_layers = min(M, N) // 2
+
+    for _ in range(T):
+        for layer in range(num_layers):
+            layer_elements = get_layer(Matrix, layer)
+            layer_elements = layer_elements[-1:] + layer_elements[:-1]
+            set_layer(Matrix, layer, layer_elements)
+    for i in range(M):
+        Matrix[i] = ''.join(Matrix[i])  
