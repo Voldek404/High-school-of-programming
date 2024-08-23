@@ -1,8 +1,8 @@
-def recursion_palindrom(number):
+def recursion_palindrom(number,i=0):
     string = str(number)
-    if len( string) <= 1:
+    if len( string)//2 <= i:
         return True
-    if  string[0] !=  string[-1]:
+    if  string[i] !=  string[-i-1]:
         return False
-    return recursion_palindrom(string[1:-1])
+    return recursion_palindrom(number,i+1)
 
