@@ -1,9 +1,11 @@
-def recursion_print_even(list_1: list):
-    if not list_1:
-        return
-    if (len(list_1) - 1) % 2 == 0:
-        print(list_1[-1])
-    list_1.pop()
-    recursion_print_even(list_1)
+def recursion_print_even(list_1, list_2=None, i=None):
+    if list_2 is None:
+        list_2 = []
+    if i is None:
+        i = 0
+    if i >= len(list_1):
+        return list_2
+    print(i)
+    return recursion_print_even(list_1, list_2, i + 2)
 
 
