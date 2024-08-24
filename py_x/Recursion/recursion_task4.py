@@ -1,4 +1,6 @@
-def recursion_palindrom(number,i=0):
+def recursion_palindrom(number, i = None):
+    if i is None:
+        i = 0
     string = str(number)
     if len( string)//2 <= i:
         return True
