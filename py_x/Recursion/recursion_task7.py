@@ -1,16 +1,20 @@
-def recursion_second_max_helper(list, index,max,count, new_list):
-    if new_list[index] > max:
-        max = new_list[index]
-    if index >= len(new_list) - 1:
-        new_list.remove(max)
-        if len(new_list) == 1:
-            return new_list[0]
+def recursion_second_max_helper(arrayOfNumbers, index, firstMaximum, secondMaximum, count):
+    if arrayOfNumbers[index] > secondMaximum:
+        secondMaximum = arrayOfNumbers[index]
+    if secondMaximum > firstMaximum:
+        firstMaximum, secondMaximum = secondMaximum, firstMaximum
+    if index >= len(arrayOfNumbers) - 1:
+        if len(arrayOfNumbers) == 1:
+            return arrayOfNumbers[0]
         count += 1
         if count == 2:
-            return max
-        max = 0
+            return secondMaximum
+        firstMaximum = 0
+        secondMaximum = 0
         index = 0
-    return recursion_second_max_helper(list,index=index + 1,max=max, count=count, new_list = new_list)
-    
-def recursion_second_max(list):
-    return recursion_second_max_helper(list, 0,0,0,list)
+    return recursion_second_max_helper(arrayOfNumbers, index=index + 1, firstMaximum=firstMaximum,
+                                       secondMaximum=secondMaximum, count=count)
+
+
+def recursion_second_max(arrayOfNumbers):
+    return recursion_second_max_helper(arrayOfNumbers, 0, 0, 0, 0)
