@@ -7,5 +7,6 @@ def recursion_palindrom(number, i):
     return recursion_palindrom(number, i + 1)  
 
 def recursion_palindrome_factory():
-    return lambda number: recursion_palindrom(number, 0)
+    return recursion_palindrom(number, 0)
+
 
