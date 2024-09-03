@@ -1,9 +1,10 @@
-def recursion_print_even_index_helper(list_1, index):
+def recursion_print_even_index_helper(list_1, index:int):
+    if len(list_1) == 0:
+        return False
     if index >= len(list_1):
         return 
-    if list_1[index] % 2 == 0:
-        print(index)
-    return recursion_print_even_index_helper(list_1,index + 1)
+    print(list_1[index])
+    return recursion_print_even_index_helper(list_1,index + 2)
     
 def recursion_print_even_index(list_1):
     return recursion_print_even_index_helper(list_1, 0)
