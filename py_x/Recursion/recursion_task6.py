@@ -1,13 +1,9 @@
-def recursion_print_even(list_1, *args, **kwargs):
-    if not args:
-        list_2 = []
-    else:
-        list_2 = args[0]
-    i = kwargs.get('i', 0)
-    if i >= len(list_1):
-        return list_2
-    list_2.append(i)
+def recursion_print_even(list_1):
+    if len(list_1) == 0:
+        return
+    if len(list_1) % 2 == 0:
+        print(list_1[0])
+    recursion_print_even(list_1[1:])
 
-    return recursion_print_even(list_1, list_2, i=i + 2)
 
 
