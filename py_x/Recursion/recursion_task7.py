@@ -1,20 +1,20 @@
-def recursion_second_max_helper(arrayOfNumbers, index, firstMaximum, secondMaximum, count):
-    if arrayOfNumbers[index] > secondMaximum:
-        secondMaximum = arrayOfNumbers[index]
-    if secondMaximum > firstMaximum:
-        firstMaximum, secondMaximum = secondMaximum, firstMaximum
-    if index >= len(arrayOfNumbers) - 1:
-        if len(arrayOfNumbers) == 1:
-            return arrayOfNumbers[0]
-        count += 1
-        if count == 2:
-            return secondMaximum
-        firstMaximum = 0
-        secondMaximum = 0
-        index = 0
-    return recursion_second_max_helper(arrayOfNumbers, index=index + 1, firstMaximum=firstMaximum,
-                                       secondMaximum=secondMaximum, count=count)
+def recursion_second_max_helper(arrayOfNumbers, index, firstMaximum, secondMaximum):
+    if index >= len(arrayOfNumbers):
+        return secondMaximum
+    current = arrayOfNumbers[index]
+    if current >=firstMaximum:
+        secondMaximum = firstMaximum
+        firstMaximum = current
+    elif current >= secondMaximum:
+        secondMaximum = current
+    return recursion_second_max_helper(arrayOfNumbers, index + 1, firstMaximum, secondMaximum)
 
 
 def recursion_second_max(arrayOfNumbers):
-    return recursion_second_max_helper(arrayOfNumbers, 0, 0, 0, 0)
+    if len(arrayOfNumbers) < 2:
+        raise ValueError("Массив должен содержать минимум два элемента")
+    if arrayOfNumbers[0] >= arrayOfNumbers[1]:
+        firstMaximum, secondMaximum = arrayOfNumbers[0], arrayOfNumbers[1]
+    elif arrayOfNumbers[0] <= arrayOfNumbers[1]:
+        firstMaximum, secondMaximum = arrayOfNumbers[1], arrayOfNumbers[0]
+    return recursion_second_max_helper(arrayOfNumbers, 2, firstMaximum, secondMaximum)
