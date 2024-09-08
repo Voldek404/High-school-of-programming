@@ -1,10 +1,9 @@
 import tkinter as tk
-from tkinter import font, messagebox
-import keyboard
-import pyperclip
-import time
+from tkinter import font
+import pygetwindow as gw
 import threading
-from pynput import keyboard as pynput_keyboard
+from pynput import keyboard
+import pyperclip
 
 def write_birds_count(number):
     units = {1: 'одна', 2: 'две', 3: 'три', 4: 'четыре', 5: 'пять', 6: 'шесть', 7: 'семь', 8: 'восемь', 9: 'девять'}
@@ -81,57 +80,6 @@ def write_birds_count(number):
 
     return ' '.join(result).capitalize() + '.'
 
-def clear_clipboard():
-    pyperclip.copy("")  # Очищаем буфер обмена
-
-def periodic_clear_clipboard():
-    global last_clipboard
-    last_clipboard = ""
-    while True:
-        time.sleep(1)  # Очищаем буфер обмена каждую секунду
-        clear_clipboard()
-
-def check_clipboard():
-    global last_clipboard
-    try:
-        current_clipboard = pyperclip.paste()
-        if current_clipboard != last_clipboard:
-            last_clipboard = current_clipboard
-            messagebox.showwarning("Предупреждение", "Для использования буфера обмена закройте программу.")
-            clear_clipboard()
-    except Exception as e:
-        print(f"Ошибка проверки буфера обмена: {e}")
-
-def clipboard_monitor():
-    while True:
-        time.sleep(0.1)  # Проверяем буфер обмена каждые 0.1 секунды
-        check_clipboard()
-
-def delayed_clear_clipboard():
-    time.sleep(1)
-    clear_clipboard()
-
-def on_print_screen(key=None):
-    threading.Thread(target=delayed_clear_clipboard).start()
-
-def on_activate_snip_and_sketch():
-    threading.Thread(target=delayed_clear_clipboard).start()
-
-def on_press(key):
-    try:
-        if key == pynput_keyboard.Key.print_screen:
-            on_print_screen()
-        elif key == pynput_keyboard.KeyCode.from_char('s') and pynput_keyboard.Key.cmd in pressed_keys:
-            on_activate_snip_and_sketch()
-    except AttributeError:
-        pass
-
-def on_release(key):
-    if key == pynput_keyboard.Key.cmd:
-        pressed_keys.discard(key)
-
-pressed_keys = set()
-
 def display_result(event=None):
     try:
         number = int(entry.get())
@@ -143,7 +91,10 @@ def display_result(event=None):
 def hide_text(event=None):
     if event and event.keysym == "Return":
         return  # Игнорируем Enter
-    result_label.config(fg=root["bg"])  # Скрываем текст
+    result_label.config(fg=root["bg"])
+
+def delayed_hide_text():
+    threading.Timer(0.05, hide_text).start()  # Скрываем текст через 50 миллисекунд
 
 def show_text(event=None):
     result_label.config(fg="white")  # Восстанавливаем текст
@@ -154,14 +105,54 @@ def on_focus_out(event):
 def on_focus_in(event):
     result_label.config(fg="white")  # Восстанавливаем текст при возвращении фокуса
 
+def on_print_screen():
+    result_label.config(fg=root["bg"])  # Скрываем текст при нажатии Print Screen
+    root.after(500, show_text)  # Восстанавливаем текст через 500 миллисекунд
+
+
+def check_snipping_tool():
+    try:
+        active_window_title = gw.getActiveWindowTitle()
+        if active_window_title and ("Snipping Tool" in active_window_title or "Ножницы" in active_window_title):
+            print("Snipping Tool detected. Exiting program.")
+            root.destroy()  # Завершаем приложение
+    except Exception as e:
+        print(f"Ошибка при проверке активного окна: {e}")
+    root.after(2000, check_snipping_tool)  # Проверяем каждые 2 секунды
+
+def on_press(key):
+    global shift_pressed
+    try:
+        if key == keyboard.Key.shift:
+            shift_pressed = True
+        elif key == keyboard.KeyCode(char='s') and shift_pressed:
+            print("Shift + S pressed. Exiting program.")
+            root.destroy()
+        elif key == keyboard.Key.cmd_l or key == keyboard.Key.cmd_r:
+            print("Win key pressed. Exiting program.")
+            root.destroy()
+    except AttributeError:
+        pass
+
+def clear_clipboard():
+    pyperclip.copy("")  # Очищаем буфер обмена
+    root.after(1000, clear_clipboard)  # Очищаем буфер обмена каждую секунду
+
+def on_release(key):
+    global shift_pressed
+    if key == keyboard.Key.shift:
+        shift_pressed = False
+
+shift_pressed = False
+
 # Создание основного окна
 root = tk.Tk()
 root.title("Число сорок прописью")
 root.configure(bg="#121400")
 
 # Настройка шрифта
-font_title = tk.font.Font(family="Times New Roman", size=24, weight="bold")
-font_result = tk.font.Font(family="Times New Roman", size=18, weight="bold")
+font_title = font.Font(family="Times New Roman", size=24, weight="bold")
+font_result = font.Font(family="Times New Roman", size=18, weight="bold")
 
 # Заголовок
 title_label = tk.Label(root, text="Число сорок прописью", bg="#121405", fg="white", font=font_title)
@@ -189,15 +180,15 @@ root.bind("<ButtonRelease>", show_text)  # Восстановление текс
 root.bind("<KeyPress>", hide_text)  # Скрытие текста при нажатии клавиш (кроме Enter)
 root.bind("<KeyRelease>", show_text)  # Восстановление текста при отпускании клавиш
 root.bind("<FocusOut>", on_focus_out)  # Скрытие текста при потере фокуса
-root.bind("<FocusIn>", on_focus_in)  # Восстановление текста при возвращении фокуса
+root.bind("<FocusIn>", on_focus_in)  # Восстанавливаем текст при возвращении фокуса
 
-# Запуск проверки Print Screen и Snip & Sketch
-listener = pynput_keyboard.Listener(on_press=on_press, on_release=on_release)
+# Запуск глобального прослушивателя клавиш
+listener = keyboard.Listener(on_press=on_press, on_release=on_release)
 listener.start()
 
-# Запуск потоков для очистки буфера и мониторинга
-last_clipboard = ""
-threading.Thread(target=periodic_clear_clipboard, daemon=True).start()
-threading.Thread(target=clipboard_monitor, daemon=True).start()
+# Запуск регулярной проверки Print Screen и активности "Ножницы"
+root.after(1, check_snipping_tool)  # Проверка активности "Ножницы" каждую секунду
+
+clear_clipboard()
 
 root.mainloop()
