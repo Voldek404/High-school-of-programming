@@ -12,6 +12,3 @@ def jsonOperations():
     unique_tasks = f"Количество уникальных задач: {len(unique_tasks)}"
     done_tasks = f"Количество выполненных задач: {countTrueTasks}"
     return unique_ids, unique_tasks, done_tasks
-
-
-print(jsonOperations())
