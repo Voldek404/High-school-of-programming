@@ -5,17 +5,13 @@ import requests
 def jsonOperations():
     response = requests.get("https://jsonplaceholder.typicode.com/todos")
     result = json.loads(response.text)
-    with open("result.json", "w") as f:
-        json.dump(result, f, indent=4)
-    with open("result.json", "r") as f:
-        json2 = json.load(f)
-    key_to_collect = 'userId'
-    combined_values = {}
-    with open("result.json", "r") as f:
-        for item in result:
-            key_value = item.get(key_to_collect)
-            if key_value is not None:
-                combined_values[
-                    key_value] = item  # Заполняем словарь, где ключ - это значение по ключу, а значение - весь объект
-    unique_ids = f"Количество уникальных пользователей {len(combined_values)}"
-    return unique_ids
+    unique_users = {item['userId'] for item in result if 'userId' in item}
+    unique_tasks = {item['id'] for item in result if 'id' in item}
+    countTrueTasks = sum(1 for item in result if item.get('completed') == True)
+    unique_ids = f"Количество уникальных пользователей: {len(unique_users)}"
+    unique_tasks = f"Количество уникальных задач: {len(unique_tasks)}"
+    done_tasks = f"Количество выполненных задач: {countTrueTasks}"
+    return unique_ids, unique_tasks, done_tasks
+
+
+print(jsonOperations())
