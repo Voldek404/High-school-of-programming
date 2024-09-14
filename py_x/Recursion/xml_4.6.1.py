@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ETree
 
-def find_parent_of_name_tag(xml_file):
+def find_parent_of_name_tag('demo.xml'):
     xml1 = ETree.parse(xml_file)
     root = xml1.getroot()
     parent_map = {}
