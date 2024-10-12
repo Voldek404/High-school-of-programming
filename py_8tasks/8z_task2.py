@@ -19,6 +19,7 @@ def digital_rain_helper(col: str, transformed_list: list, sum_dict: dict, summa:
 def digital_rain(col: str, transformed_list: list):
     return digital_rain_helper(col, transformed_list, {0: -1}, 0, [], 0)
 
-
+col = '01000010'
 transformed_list = [1 if bit == '1' else -1 for bit in col]
 
+print(digital_rain(col, transformed_list))
