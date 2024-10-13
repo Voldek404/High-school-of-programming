@@ -3,25 +3,25 @@ class BitSet:
         self.size = size
         self.bitset = bytearray(self.size)
 
-    def add(self, number):
-
+    def artificial_muscle_fibers_helper(self, number, repeated_array):
         byte_index = number // 8
         bit_index = number % 8
-        if byte_index >= self.size:
+        if byte_index >= 8192:
             raise ValueError("Число выходит за пределы буфера")
-
-        # Проверяем, если бит уже установлен
         if self.bitset[byte_index] & (1 << bit_index):
-            return False  # Число повторяется
+            repeated_array.append(number)
+            return False
         else:
-            # Устанавливаем бит
             self.bitset[byte_index] |= (1 << bit_index)
-            return True  # Новое число
+            return True
+
+    def artificial_muscle_fibers(self, numbers):
+        repeated_array = []
+        for index, number in enumerate(numbers):
+            self.artificial_muscle_fibers_helper(number, repeated_array)
+        return len(repeated_array)
+
 
 bitset = BitSet(32000)
-
-numbers = [1, 2, 32000, 15, 2, 32000]  # Пример чисел, где 2 и 32000 повторяются
-
-for num in numbers:
-    if not bitset.add(num):
-        print(f"Число {num} повторяется.")
+numbers = [1, 2, 32000, 15, 2, 32000]
+repeated_numbers = bitset.artificial_muscle_fibers(numbers)
