@@ -30,6 +30,17 @@ class LinkedList:
             node = node.next
         return None
 
+    def find_all(self, val):
+        if self.head is None:
+            return None
+        values_list = []
+        node = self.head
+        while node is not None:
+            if node.value == val:
+                values_list.append(node.value)
+            node = node.next
+        return values_list
+
     def delete(self, val, all=False):
         while self.head is not None and self.head.value == val:
             self.head = self.head.next
@@ -50,22 +61,11 @@ class LinkedList:
         if self.head is None:
             return
         node = self.head
-        while node  is not None:
-            next_node = node .next
-            node .next = None
-            node  = node .next
-        node  = None
-
-    def find_all(self, val):
-        if self.head is None:
-            return None
-        values_list = []
-        node = self.head
         while node is not None:
-            if node.value == val:
-                values_list.append(node.value)
+            next_node = node.next
+            node.next = None
             node = node.next
-        return values_list
+        node = None
 
     def len(self):
         if self.head is None:
@@ -76,3 +76,16 @@ class LinkedList:
             count += 1
             node = node.next
         return count
+
+    def insert(self, afterNode, newNode):
+        if afterNode is None:
+            newNode.next = self.head
+            self.head = newNode
+            return
+        node = self.head
+        while node is not None:
+            if node == afterNode:
+                newNode.next = node.next
+                node.next = newNode
+                return
+            node = node.next
