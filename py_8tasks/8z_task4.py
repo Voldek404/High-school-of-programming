@@ -25,3 +25,4 @@ class BitSet:
 bitset = BitSet(32000)
 numbers = [1, 2, 32000, 15, 2, 32000]
 repeated_numbers = bitset.artificial_muscle_fibers(numbers)
+print(repeated_numbers)
