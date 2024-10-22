@@ -44,11 +44,11 @@ class TestLinkedListMethods(unittest.TestCase):
         self.list.insert(node2, node3)
         self.list.insert(node3, node4)
 
-        self.list.delete(1)  # Удаляем только первое вхождение
+        self.list.delete(1)
         self.assertEqual(self.list.head.value, 2)
         self.assertEqual(self.list.head.next.value, 1)
 
-        self.list.delete(1, all=True)  # Удаляем все вхождения
+        self.list.delete(1, all=True)
         self.assertEqual(self.list.head.next.value, 3)
 
     def test_clean(self):
