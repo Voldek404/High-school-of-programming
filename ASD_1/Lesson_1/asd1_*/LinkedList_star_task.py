@@ -31,6 +31,8 @@ class LinkedList:
 
 
 def sum_return( list_1, list_2):
+    if list_1.len() != list_2.len():
+        return None
     node_1 = list_1.head
     node_2 = list_2.head
     list_3 = LinkedList()
@@ -46,5 +48,3 @@ def sum_return( list_1, list_2):
             node_1 = node_1.next
             node_2 = node_2.next
         return list_3
-    else:
-        return None
