@@ -32,7 +32,7 @@ class LinkedList:
 
     def find_all(self, val):
         if self.head is None:
-            return None
+            return []
         values_list = []
         node = self.head
         while node is not None:
