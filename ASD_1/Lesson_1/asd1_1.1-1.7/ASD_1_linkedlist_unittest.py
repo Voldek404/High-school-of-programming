@@ -29,8 +29,8 @@ class TestLinkedListMethods(unittest.TestCase):
         self.list.insert(node1, node2)
         self.list.insert(node2, node3)
 
-        self.assertEqual(self.list.find_all(1), [1, 1])
-        self.assertEqual(self.list.find_all(2), [2])
+        self.assertEqual(self.list.find_all(1), [node1, node3])
+        self.assertEqual(self.list.find_all(2), [node2 ])
         self.assertEqual(self.list.find_all(3), [])
 
     def test_delete(self):
