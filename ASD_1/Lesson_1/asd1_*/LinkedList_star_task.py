@@ -22,6 +22,13 @@ class LinkedList:
             node = node.next
         return count
 
+    def add_in_tail(self, item):
+        if self.head is None:
+            self.head = item
+        else:
+            self.tail.next = item
+        self.tail = item
+
 
 def sum_return( list_1, list_2):
     node_1 = list_1.head
