@@ -3,7 +3,7 @@ import unittest
 from ASD_1_linkedlist import LinkedList2, Node
 
 
-class TestLinkedList2(unittest.TestCase):
+class TestLinkedList2Methods(unittest.TestCase):
     def setUp(self):
         self.linked_list = LinkedList2()
 
