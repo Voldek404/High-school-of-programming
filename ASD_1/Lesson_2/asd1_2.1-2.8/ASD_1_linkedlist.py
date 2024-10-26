@@ -20,6 +20,7 @@ class LinkedList2:
             item.prev = self.tail
         self.tail = item
 
+
     def find(self, val):
         node = self.head
         while node:
@@ -78,7 +79,6 @@ class LinkedList2:
             node = node.next
         return length
 
-
     def insert(self, afterNode, newNode):
         if afterNode is None:
             if self.head is None:
@@ -96,11 +96,12 @@ class LinkedList2:
                     newNode.prev = node
                     if node.next is not None:
                         node.next.prev = newNode
-                    node.next = newNode
-                    if node == self.tail:
+                    else:
                         self.tail = newNode
+                    node.next = newNode
                     return
                 node = node.next
+
 
 
     def add_in_head(self, newNode):
