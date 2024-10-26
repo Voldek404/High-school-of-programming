@@ -44,7 +44,7 @@ class TestLinkedList2Methods(unittest.TestCase):
         self.linked_list.add_in_tail(node3)
 
         self.linked_list.delete(2)
-        self.assertEqual(self.linked_list.length(), 2)
+        self.assertEqual(self.linked_list.len(), 2)
         self.assertIsNone(self.linked_list.find(2))
 
         self.linked_list.delete(1)
