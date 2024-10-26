@@ -82,23 +82,26 @@ class LinkedList2:
 
 
 def insert(self, afterNode, newNode):
-    node = self.head
     if afterNode is None:
         if self.head is None:
             self.head = newNode
             self.tail = newNode
         else:
-            self.tail.next = newNode
-            newNode.prev = self.tail
-            self.tail = newNode
+            newNode.next = self.head
+            self.head.prev = newNode
+            self.head = newNode
     else:
+        node = self.head
         while node is not None:
             if node == afterNode:
                 newNode.next = node.next
                 newNode.prev = node
+
                 if node.next is not None:
-                    node.next.prev = NewNode
+                    node.next.prev = newNode
+
                 node.next = newNode
+
                 if node == self.tail:
                     self.tail = newNode
                 return
