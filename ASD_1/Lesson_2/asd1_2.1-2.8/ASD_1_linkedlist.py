@@ -20,7 +20,6 @@ class LinkedList2:
             item.prev = self.tail
         self.tail = item
 
-
     def find(self, val):
         node = self.head
         while node:
@@ -98,8 +97,6 @@ class LinkedList2:
             if afterNode is self.tail:
                 self.tail = newNode
 
-
-
     def add_in_head(self, newNode):
         node = self.head
         if node is None:
@@ -109,3 +106,61 @@ class LinkedList2:
             newNode.next = node
             node.prev = newNode
             self.head = newNode
+
+    def list_rotation(self):
+        if self.head is None and self.tail is None:
+            return None
+        ex_list_head = self.head
+        ex_list_tail = self.tail
+        node = self.head
+        while node:
+            node_next = node.next
+            node.next, node.prev = node.prev, node.next
+            node = node_next
+        self.tail = ex_list_head
+        self.head = ex_list_tail
+
+    def cycle_or_not(self):
+        point_one = self.head
+        point_two = self.head
+        while point_two and point_two.next:
+            if point_one == point_two:
+                return True
+            point_one = point_one.next
+            point_two = point_two.next.next
+        return False
+
+    def sort(self):
+        length = self.len()
+        list2 = LinkedList2()
+        for _ in range(length):
+            min_node = self.head
+            node = self.head
+            while node:
+                if node.value < min_node.value:
+                    min_node = node
+                node = node.next
+            list2.add_in_tail(Node(min_node.value))
+            self.delete(min_node)
+        return list2
+
+    def combine_lists(self, list1, list2):
+        list3 = LinkedList2()
+        list1.sort()
+        list2.sort()
+        node_1 = list1.head
+        node_2 = list2.head
+        while node_1 is not None and node_2 is not None:
+            if node_1.value < node_2.value:
+                list3.add_in_tail(Node(node_1.value))
+                node_1 = node_1.next
+            if node_1.value >= node_2.value:
+                list3.add_in_tail(Node(node_2.value))
+                node_2 = node_2.next
+        while node_1 is not None:
+            list3.add_in_tail(Node(node_1.value))
+            node_1 = node_1.next
+        while node_2 is not None:
+            list3.add_in_tail(Node(node_2.value))
+            node_2 = node_2.next
+        return list3
