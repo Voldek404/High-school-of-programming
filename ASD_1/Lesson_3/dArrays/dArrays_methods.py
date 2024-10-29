@@ -50,7 +50,7 @@ class DynArray:
             raise IndexError('Index is out of bounds')
         else:
             for j in range(i, self.count - 1):
-                self.array[j + 1] = self.array[j]
+                self.array[j] = self.array[j+1]
             self.count -= 1
         if self.count < 0.5 * self.capacity:
             new_capacity = max(int(self.capacity / 1.5), 16)
