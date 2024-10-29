@@ -1,13 +1,19 @@
 class Node:
-    def init(self, v):
+    def __init__(self, v):
         self.value = v
         self.prev = None
         self.next = None
 
+class Dummy(Node):
+    def __init__(self):
+        super().__init__(None)
+        self.head = self
+        self.tail = self
+
 
 class LinkedList2:
-    def init(self):
-        self.dummy = Node(None)
+    def __init__(self):
+        self.dummy = Dummy()
         self.head = self.dummy
         self.tail = self.dummy
 
@@ -19,66 +25,80 @@ class LinkedList2:
 
     def find(self, val):
         node = self.head.next
-            if node.value == val:
-                return node
-            node = node.next
-        return None
+        if node.value == val:
+            return node
+        node = node.next
 
-    def find_all(self, val):
-        node = self.head.next
-        list_of_nodes = []
+
+    def cycle_or_not(self):
+        node = self.head
         while node:
-            if node.value == val:
-                list_of_nodes.append(node)
             node = node.next
-        return list_of_nodes
+            if node == self.dummy:
+                return False
+        return True
 
-    def delete(self, val, all=False):
-        node = self.head.next
-        while node:
-            if node.value == val:
-                node.prev.next = node.next
-                if node.next:
-                    node.next.prev = node.prev
-                if not all:
-                    break
-            node = node.next
 
-    def clean(self):
-        node = self.head.next
-        while node:
-            next_node = node.next
-            node.next = None
-            node.prev = None
-            node = next_node
-        self.head.next = None
-        self.tail = self.dummy
+def find_all(self, val):
+    node = self.head.next
+    list_of_nodes = []
+    while node:
+        if node.value == val:
+            list_of_nodes.append(node)
+        node = node.next
+    return list_of_nodes
 
-    def len(self):
-        node = self.head.next
-        length = 0
-        while node:
-            length += 1
-            node = node.next
-        return length
 
-    def insert(self, afterNode, newNode):
-        if afterNode is None:
-            self.add_in_head(newNode)
-        else:
-            newNode.next = afterNode.next
-            newNode.prev = afterNode
-            if afterNode.next:
-                afterNode.next.prev = newNode
-            afterNode.next = newNode
-            if afterNode is self.tail:
-                self.tail = newNode
+def delete(self, val, all=False):
+    node = self.head.next
+    while node:
+        if node.value == val:
+            node.prev.next = node.next
+            if node.next:
+                node.next.prev = node.prev
+            if not all:
+                break
+        node = node.next
 
-    def add_in_head(self, newNode):
-        newNode.next = self.head.next
-        newNode.prev = self.dummy
-        if self.head.next:
-            self.head.next.prev = newNode
-        self.head.next = newNode
-        if self.tail is self.dummy:
+
+def clean(self):
+    node = self.head.next
+    while node:
+        next_node = node.next
+        node.next = None
+        node.prev = None
+        node = next_node
+    self.head.next = None
+    self.tail = self.dummy
+
+
+def len(self):
+    node = self.head.next
+    length = 0
+    while node:
+        length += 1
+        node = node.next
+    return length
+
+
+def insert(self, afterNode, newNode):
+    if afterNode is None:
+        self.add_in_head(newNode)
+    else:
+        newNode.next = afterNode.next
+        newNode.prev = afterNode
+        if afterNode.next:
+            afterNode.next.prev = newNode
+        afterNode.next = newNode
+        if afterNode is self.tail:
             self.tail = newNode
+
+
+def add_in_head(self, newNode):
+    newNode.next = self.head.next
+    newNode.prev = self.dummy
+    if self.head.next:
+        self.head.next.prev = newNode
+    self.head.next = newNode
+    if self.tail is self.dummy:
+        self.tail = newNode
