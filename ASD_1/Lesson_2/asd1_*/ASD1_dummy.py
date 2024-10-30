@@ -18,7 +18,7 @@ class LinkedList2:
         self.head = self.dummy
         self.tail = self.dummy
 
-    def add_in_tail(self, item: Any):
+    def add_in_tail(self, item: Any)->None:
         self.tail.next = item
         item.prev = self.tail
         item.next = None
