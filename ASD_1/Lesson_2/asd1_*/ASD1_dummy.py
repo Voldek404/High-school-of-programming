@@ -18,7 +18,7 @@ class LinkedList2:
         self.head = self.dummy
         self.tail = self.dummy
 
-    def add_in_tail(self, item: Any)->None:
+    def add_in_tail(self, item: Any) -> None:
         self.tail.next = item
         item.prev = self.tail
         item.next = None
@@ -35,9 +35,9 @@ class LinkedList2:
     def cycle_or_not(self) -> bool:
         node = self.head
         while node:
-            node = node.next
-            if node  is self.dummy:
+            if isinstance(node, Dummy):
                 return False
+            node = node.next
         return True
 
     def find_all(self, val: Any) -> list:
@@ -59,7 +59,6 @@ class LinkedList2:
                 if not all:
                     break
             node = node.next
-
 
     def clean(self) -> None:
         node = self.head.next
@@ -90,7 +89,6 @@ class LinkedList2:
             afterNode.next = newNode
             if afterNode is self.tail:
                 self.tail = newNode
-
 
     def add_in_head(self, newNode):
         newNode.next = self.head.next
