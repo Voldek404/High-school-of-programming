@@ -33,7 +33,7 @@ class LinkedList2:
         node = self.head
         while node is not isinstance(node, Dummy):
             node = node.next
-        return node is None
+        return not (node is None)
 
     def find_all(self, val: Any) -> list:
         node = self.head.next
