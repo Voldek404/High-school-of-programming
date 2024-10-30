@@ -24,17 +24,19 @@ class LinkedList2:
         item.next = None
         self.tail = item
 
-    def find(self, val: Any)-> Node:
-        node = self.head.next
-        if node.value == val:
-            return node
-        node = node.next
+    def find(self, val: Any) -> Node | None:
+        node = self.head
+        while node:
+            if node.value == val:
+                return node
+            node = node.next
+        return None
 
     def cycle_or_not(self) -> bool:
         node = self.head
         while node:
             node = node.next
-            if node == self.dummy:
+            if node  is self.dummy:
                 return False
         return True
 
