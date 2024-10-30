@@ -6,10 +6,7 @@ class Node:
 
 
 class Dummy(Node):
-    def __init__(self):
-        super().__init__(None)
-        self.head = self
-        self.tail = self
+    pass
 
 
 class LinkedList2:
@@ -26,7 +23,7 @@ class LinkedList2:
 
     def find(self, val: Any) -> Node | None:
         node = self.head
-        while node:
+        while node is not None:
             if node.value == val:
                 return node
             node = node.next
@@ -34,7 +31,7 @@ class LinkedList2:
 
     def cycle_or_not(self) -> bool:
         node = self.head
-        while node:
+        while node is not None:
             if isinstance(node, Dummy):
                 return False
             node = node.next
@@ -43,7 +40,7 @@ class LinkedList2:
     def find_all(self, val: Any) -> list:
         node = self.head.next
         list_of_nodes = []
-        while node:
+        while node is not None:
             if node.value == val:
                 list_of_nodes.append(node)
             node = node.next
@@ -51,7 +48,7 @@ class LinkedList2:
 
     def delete(self, val: Any, all=False) -> None:
         node = self.head.next
-        while node:
+        while node is not None:
             if node.value == val:
                 node.prev.next = node.next
                 if node.next:
@@ -62,7 +59,7 @@ class LinkedList2:
 
     def clean(self) -> None:
         node = self.head.next
-        while node:
+        while node is not None:
             next_node = node.next
             node.next = None
             node.prev = None
@@ -73,7 +70,7 @@ class LinkedList2:
     def len(self) -> int:
         node = self.head.next
         length = 0
-        while node:
+        while node is not None:
             length += 1
             node = node.next
         return length
