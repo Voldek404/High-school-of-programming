@@ -30,7 +30,7 @@ class DynArray:
         if self.count + self.bank_account >= self.capacity:
             self.capacity = self.capacity * 2
             self.resize(self.capacity)
-            self.bank_account = int(self.capacity * 0.25)
+            self.bank_account -= self.capacity / 2
         self.array[self.count] = itm
         self.count += 1
         if self.bank_account > 0:
