@@ -57,8 +57,8 @@ class DynArray:
             self.array[j] = self.array[j + 1]
         self.array[self.count - 1] = None
         self.count -= 1
-        if self.count < self.capacity // 4:
-            new_capacity = max(self.capacity // 2, 16)
+        if self.count < self.capacity * 0.5:
+            new_capacity = max(self.capacity // 1.5, 16)
             self.resize(new_capacity)
             self.capacity = new_capacity
             self.bank_account = int(self.capacity * 0.25)
