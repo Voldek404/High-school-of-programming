@@ -34,7 +34,7 @@ class DynArray:
         self.array[self.count] = itm
         self.count += 1
         if self.bank_account > 0:
-            self.bank_account -= 1
+            self.bank_account += 2
 
     def insert(self, i, itm):
         if i < 0 or i > self.count:
@@ -48,7 +48,7 @@ class DynArray:
         self.array[i] = itm
         self.count += 1
         if self.bank_account > 0:
-            self.bank_account -= 1
+            self.bank_account += 2
 
     def delete(self, i):
         if i < 0 or i >= self.count:
