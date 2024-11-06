@@ -19,16 +19,12 @@ class Stack:
 
 
 def balanced_brackets(target_string: str, stack_new) -> bool:
-    for i in range(len(target_string)):
-        if target_string[i] == '(' or target_string[i] == '[' or target_string[i] == '{':
-            stack_new.push(target_string[i])
-        elif (target_string[i] == ')' and stack_new.peek() == '(') or \
-                (target_string[i] == ']' and stack_new.peek() == '[') or \
-                (target_string[i] == '}' and stack_new.peek() == '{'):
-            stack_new.pop()
-        elif target_string[i] == ')' or target_string[i] == ']' or target_string[i] == '}':
-            return False
-    if len(stack_new.stack) == 0:
-        return True
-    else:
-        return False
+    open_brackets = {'(', '[','{'}
+    closed_brackets ={')': '(', ']': '[', '}': '{'}
+    for i in target_string:
+        if i in open_brackets:
+            stack_new.push(i)
+        elif i in closed_brackets:
+            if stack_new.size() == 0 or stack_new.pop() != closed_brackets[i]:
+                return False
+    return stack_new.size() == 0

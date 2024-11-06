@@ -24,11 +24,8 @@ def balanced_brackets(target_string: str, stack_new) -> bool:
             stack_new.push(target_string[i])
         elif target_string[i] == ')' and stack_new.peek() == '(':
             stack_new.pop()
-        elif target_string[i] == ')':
+        elif target_string[i] == ')' and len(stack_new.stack) == 0:
             return False
-    if len(stack_new.stack) == 0:
-        return True
-    else:
-        return False
+    return len(stack_new.stack) == 0
 
 

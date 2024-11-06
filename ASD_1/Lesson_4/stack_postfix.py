@@ -17,21 +17,15 @@ class Stack:
         return self.stack[-1] if self.size() > 0 else None
 
     def evaluate_operations(self, value):
+        operations_dict = {"+": "+", "-": "-", "*": "*", "/": "/"}
         if isinstance(value, int):
             self.operating_stack.append(value)
-        elif value in {'+', '-', '*', '/'}:
+        elif value in operations_dict:
             b = self.operating_stack.pop()
             a = self.operating_stack.pop()
-            if value == '+':
-                self.operating_stack.append(a + b)
-            elif value == '-':
-                self.operating_stack.append(a - b)
-            elif value == '*':
-                self.operating_stack.append(a * b)
-            elif value == '/' and b != 0:
-                self.operating_stack.append(a / b)
-            else:
-                raise ValueError("Division by zero")
+            if  operations_dict[value] and b == 0:
+                raise ZeroDivisionError
+            self.operating_stack.append(eval(f"{a}{operations_dict[value]}{b}"))
 
     def get_result(self):
         return self.operating_stack[-1] if len(self.operating_stack) == 1 else None

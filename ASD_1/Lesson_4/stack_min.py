@@ -14,7 +14,7 @@ class Stack:
 
     def push(self, value):
         self.stack.append(value)
-        if not self.min_stack or value <= self.min_stack[-1]:
+        if len(self.min_stack) == 0 or value <= self.min_stack[-1]:
             self.min_stack.append(value)
 
     def peek(self):
