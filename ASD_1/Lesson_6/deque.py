@@ -135,7 +135,7 @@ class Deque:
                 self.deque.tail.next = None
 
     def size(self):
-        if self.deque.head None:
+        if self.deque.head is None:
             return 0
         temp = self.head
         count = 0
