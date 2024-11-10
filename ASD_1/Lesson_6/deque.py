@@ -135,5 +135,5 @@ class Deque:
                 self.deque.tail.next = None
 
     def size(self):
-        self.deque.len()
-        return 0
+        return self.deque.len()
+
