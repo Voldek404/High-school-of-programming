@@ -1,139 +1,84 @@
-class Node:
-    def __init__(self, v):
-        self.value = v
-        self.prev = None
-        self.next = None
+import ctypes
 
 
-class LinkedList2:
+class DynArray:
+
     def __init__(self):
-        self.head = None
-        self.tail = None
+        self.count = 0
+        self.capacity = 16
+        self.array = self.make_array(self.capacity)
 
-    def add_in_tail(self, item):
-        if self.head is None:
-            self.head = item
-            item.prev = None
-            item.next = None
-        else:
-            self.tail.next = item
-            item.prev = self.tail
-        self.tail = item
+    def __len__(self):
+        return self.count
 
-    def find(self, val):
-        node = self.head
-        while node:
-            if node.value == val:
-                return node
-            node = node.next
-        return None
+    def make_array(self, new_capacity):
+        return (new_capacity * ctypes.py_object)()
 
-    def find_all(self, val):
-        node = self.head
-        list_of_nodes = []
-        if not node:
-            return []
-        while node:
-            if node.value == val:
-                list_of_nodes.append(node)
-            node = node.next
-        return list_of_nodes
+    def __getitem__(self, i):
+        if i < 0 or i >= self.count:
+            raise IndexError("Index is out of bounds")
+        return self.array[i]
 
-    def delete(self, val, all=False):
-        node = self.head
-        while node:
-            if node.value == val:
-                if node.prev is not None:
-                    node.prev.next = node.next
-                else:
-                    self.head = node.next
-                if node.next is not None:
-                    node.next.prev = node.prev
-                else:
-                    self.tail = node.prev
-                current = node
-                node = node.next
-                current.next = None
-                current.prev = None
-                if not all:
-                    break
-            else:
-                node = node.next
+    def resize(self, new_capacity):
+        new_array = self.make_array(new_capacity)
+        for i in range(self.count):
+            new_array[i] = self.array[i]
+        self.array = new_array
+        self.capacity = new_capacity
 
-    def clean(self):
-        node = self.head
-        while node:
-            next_node = node.next
-            node.next = None
-            node.prev = None
-            node = next_node
-        self.head = None
-        self.tail = None
+    def append(self, itm):
+        if self.count == self.capacity:
+            self.resize(2 * self.capacity)
+        self.array[self.count] = itm
+        self.count += 1
+
+    def insert(self, i, itm):
+        if i < 0 or i > self.count:
+            raise IndexError("Index is out of bounds")
+        if self.count == self.capacity:
+            self.resize(2 * self.capacity)
+        for j in range(self.count, i, -1):
+            self.array[j] = self.array[j - 1]
+        self.array[i] = itm
+        self.count += 1
+
+    def delete(self, i):
+        if i < 0 or i >= self.count:
+            raise IndexError("Index is out of bounds")
+        for j in range(i, self.count - 1):
+            self.array[j] = self.array[j + 1]
+        self.count -= 1
+        if self.count < 0.5 * self.capacity:
+            new_capacity = max(int(self.capacity / 1.5), 16)
+            self.resize(new_capacity)
 
     def len(self):
-        node = self.head
-        length = 0
-        while node:
-            length += 1
-            node = node.next
-        return length
-
-    def insert(self, afterNode, newNode):
-        if afterNode is None:
-            if self.head is None:
-                self.head = newNode
-                self.tail = newNode
-            else:
-                newNode.prev = self.tail
-                newNode.prev.next = newNode
-                newNode.next = None
-                self.tail = newNode
-        else:
-            if afterNode.next is not None:
-                afterNode.next.prev = newNode
-            newNode.next = afterNode.next
-            newNode.prev = afterNode
-            afterNode.next = newNode
-            if afterNode is self.tail:
-                self.tail = newNode
-
-    def add_in_head(self, newNode):
-        node = self.head
-        if node is None:
-            self.head = newNode
-            self.tail = newNode
-        else:
-            newNode.next = node
-            node.prev = newNode
-            self.head = newNode
+        return self.count
 
 
 class Deque:
     def __init__(self):
-        self.deque = LinkedList2()
+        self.deque = DynArray()
 
     def addFront(self, item):
-        self.deque.add_in_head(item)
+        self.deque.insert(0, item)
 
     def addTail(self, item):
-        self.deque.add_in_tail(item)
+        self.deque.append(item)
 
     def removeFront(self):
-        if self.deque.head is not None:
-            if self.deque.head.next is None:
-                self.deque.head = self.deque.tail = None
-            else:
-                self.deque.head = self.deque.head.next
-                self.deque.head.prev = None
+        if self.deque.len() == 0:
+            return None
+        result = self.deque[0]
+        self.deque.delete(0)
+        return result
 
     def removeTail(self):
-        if self.deque.tail is not None:
-            if self.deque.tail.prev is None:
-                self.deque.head = self.deque.tail = None
-            else:
-                self.deque.tail = self.deque.tail.prev
-                self.deque.tail.next = None
+        if self.deque.len() == 0:
+            return None
+        result = self.deque[self.deque.len() - 1]
+        self.deque.delete(self.deque.len() - 1)
+        return result
 
     def size(self):
         return self.deque.len()
-
