@@ -17,16 +17,14 @@ class Queue:
             self.enqueue(self.dequeue())
         return None
 
-    def queueReverse_helper(self, counter, temp):
-        if  self.size() == 0:
-            while temp:
-                self.enqueue(temp.pop(0))
+    def queueReverse_helper(self, index):
+        if index == self.size():
             return self.queue
-        temp.append(self.queue.pop())
-        return self.queueReverse_helper(counter=counter + 1, temp = temp)
+        self.enqueue(self.queue.pop(- index - 1))
+        return self.queueReverse_helper(index = index + 1)
 
     def queueReverse(self):
-        return self.queueReverse_helper(counter=0, temp=[])
+        return self.queueReverse_helper(index = 0)
 
 
 qu = Queue()
