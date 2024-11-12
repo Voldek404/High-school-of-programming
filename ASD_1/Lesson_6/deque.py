@@ -59,12 +59,16 @@ class DynArray:
 class Deque:
     def __init__(self):
         self.deque = DynArray()
+        self.deque_2 = DynArray()
 
     def addFront(self, item):
         self.deque.insert(0, item)
 
     def addTail(self, item):
         self.deque.append(item)
+        while len(self.deque_2) > 0 and self.deque_2[len(self.deque_2) - 1] > item:
+            self.deque_2.delete(self.deque_2.len() - 1)
+        self.deque_2.append(item)
 
     def removeFront(self):
         if self.deque.len() == 0:
@@ -78,7 +82,40 @@ class Deque:
             return None
         result = self.deque[self.deque.len() - 1]
         self.deque.delete(self.deque.len() - 1)
+        if result == self.deque_2[0]:
+            self.deque_2.popleft()
         return result
 
     def size(self):
         return self.deque.len()
+
+    def isPalindrome(self):
+        if self.size() == 0 or self.size() == 1:
+            return True
+        if self.removeFront() == self.removeTail():
+            return self.isPalindrome()
+        else:
+            return False
+
+    def dequeMinimum(self) -> int:
+        if not self.deque_2:
+            self.deque_2.append(self.deque[0])
+        for i in range(1, self.size()):
+            if self.deque[i] <= self.deque_2[len(self.deque_2) - 1]:
+                self.deque_2.append(self.deque[i])
+        for j in range(self.size(), 0, -1):
+            if self.deque[j - 1] == self.deque_2[len(self.deque_2) - 1]:
+                return self.deque[j - 1]
+
+    def getMin(self):
+        return self.deque_2[0] if self.deque_2 else None
+
+
+deq = Deque()
+deq.addFront(4)
+deq.addTail(1)
+deq.addTail(-1)
+deq.addTail(42)
+deq.addTail(4)
+print(deq.dequeMinimum())
+print(deq.getMin())
