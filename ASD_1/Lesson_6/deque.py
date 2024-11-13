@@ -89,13 +89,6 @@ class Deque:
     def size(self):
         return self.deque.len()
 
-    def isPalindrome(self):
-        if self.size() == 0 or self.size() == 1:
-            return True
-        if self.removeFront() == self.removeTail():
-            return self.isPalindrome()
-        else:
-            return False
 
     def dequeMinimum(self) -> int:
         if not self.deque_2:
@@ -110,12 +103,13 @@ class Deque:
     def getMin(self):
         return self.deque_2[0] if self.deque_2 else None
 
+    def isPalindrome(self):
+        if self.size() == 0 or self.size() == 1:
+            return True
+        if self.removeFront() == self.removeTail():
+            return self.isPalindrome()
+        else:
+            return False
 
-deq = Deque()
-deq.addFront(4)
-deq.addTail(1)
-deq.addTail(-1)
-deq.addTail(42)
-deq.addTail(4)
-print(deq.dequeMinimum())
-print(deq.getMin())
+
+
