@@ -101,19 +101,16 @@ class Deque:
     def isPalindrome(self):
         if self.size() == 0 or self.size() == 1:
             return True
-        if self.removeFront() == self.removeTail():
-            return self.isPalindrome()
-        else:
+        if self.removeFront() != self.removeTail():
             return False
+        return isPalindrome()
 
     def bracketsBalance(self, target_string: str):
-        open_brackets = ['(', '{', '[']
-        closed_brackets = [')', '}', ']']
         matching_brackets = {')':'(', '}':'{', ']':'['}
         for i in target_string:
-            if i in open_brackets:
+            if i in matching_brackets.values():
                 self.addTail(i)
-            elif i in closed_brackets:
+            elif i in matching_brackets.keys():
                 if self.size() == 0 or self.removeTail() != matching_brackets[i]:
                     return False
         return self.size()==0
