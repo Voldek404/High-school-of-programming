@@ -84,7 +84,6 @@ class Deque:
     def size(self):
         return self.deque.len()
 
-
     def dequeMinimum(self) -> int:
         if not self.deque_2:
             self.deque_2.append(self.deque[0])
@@ -98,25 +97,34 @@ class Deque:
     def getMin(self):
         return self.deque_2[0] if self.deque_2 else None
 
-    def isPalindrome(self):
-        if self.size() == 0 or self.size() == 1:
-            return True
-        if self.removeFront() != self.removeTail():
-            return False
-        return isPalindrome()
-
-    def bracketsBalance(self, target_string: str):
+    def bracketsBalance(self):
         matching_brackets = {')':'(', '}':'{', ']':'['}
-        for i in target_string:
-            if i in matching_brackets.values():
-                self.addTail(i)
-            elif i in matching_brackets.keys():
-                if self.size() == 0 or self.removeTail() != matching_brackets[i]:
+        length = self.size()
+        for i in range(self.size()):
+            if self.deque[i] in matching_brackets.values():
+                self.addTail(self.deque[i])
+            elif self.deque[i] in matching_brackets.keys():
+                if self.size() == 0 or self.removeTail() != matching_brackets[self.deque[i]]:
                     return False
-        return self.size()==0
+        return self.size()==length
+
+    def isPalindrome_helper(self, index):
+        if self.size() == 0:
+            return False
+        if index == self.size() // 2:
+            return True
+        if self.deque[index] != self.deque[self.size() - index - 1]:
+            return False
+        return self.isPalindrome_helper(index + 1)
+
+    def isPalindrome(self):
+        return self.isPalindrome_helper(0)
 
 
 deq = Deque()
-target_string = '(())'
+deq.addFront("(")
+deq.addTail(")")
+deq.addTail("{")
+deq.addTail(")")
 
-print(deq.bracketsBalance(target_string))
+print(deq.bracketsBalance())
