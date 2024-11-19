@@ -100,32 +100,38 @@ class Deque:
     def bracketsBalance(self):
         length = self.size()
         for i in range(self.size()):
-            if self.deque[i] == '(':
+            if self.deque[i] == '(' or self.deque[i] == '[' or self.deque[i] == "{":
                 self.addTail(self.deque[i])
-            elif self.deque[i] == ')' :
+            elif self.deque[i] == ')':
                 if self.size() == length or self.removeTail() != '(':
+                    return False
+            elif self.deque[i] == ']':
+                if  self.size() == length or  self.removeTail() != '[':
+                    return False
+            elif self.deque[i] == '}':
+                if  self.size() == length or  self.removeTail() != '{' :
                     return False
         return self.size() == length
 
-    def isPalindrome_helper(self, index):
-        if self.size() == 0:
-            return False
-        if index == self.size() // 2:
-            return True
-        if self.deque[index] != self.deque[self.size() - index - 1]:
-            return False
-        return self.isPalindrome_helper(index + 1)
 
-    def isPalindrome(self):
-        return self.isPalindrome_helper(0)
+def isPalindrome_helper(self, index):
+    if self.size() == 0:
+        return False
+    if index == self.size() // 2:
+        return True
+    if self.deque[index] != self.deque[self.size() - index - 1]:
+        return False
+    return self.isPalindrome_helper(index + 1)
+
+
+def isPalindrome(self):
+    return self.isPalindrome_helper(0)
 
 
 deq = Deque()
 deq.addFront("(")
-deq.addTail("{")
-deq.addTail("}")
+deq.addTail("(")
 deq.addTail(")")
-
-
+deq.addTail(")")
 
 print(deq.bracketsBalance())
