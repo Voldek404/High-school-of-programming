@@ -125,6 +125,55 @@ class OrderedList:
             self.tail = newNode
         self.head = newNode
 
+    def deleteDuplicates(self):
+        node = self.head
+        while node is not None and node.next is not None:
+            if node.next.value == node.value:
+                self.delete(node.next.value)
+            else:
+                node = node.next
+
+    def mergeTwoLists(self,list_1, list_2):
+        list_1.deleteDuplicates()
+        list_2.deleteDuplicates()
+        mergedList = OrderedList()
+        if list_1 is None:
+            return list_2
+        if list_2 is None:
+            return list_1
+        node_1 = list_1.head
+        node_2 = list_2.head
+        if node_1.value < node_1.next.value:
+            while node_1 is not None and node_2 is not None:
+                if node_1.value < node_2.value:
+                    mergedList .add_in_tail(Node(node_1.value))
+                    node_1 = node_1.next
+                if node_1.value >= node_2.value:
+                    mergedList .add_in_tail(Node(node_2.value))
+                    node_2 = node_2.next
+            while node_1 is not None:
+                mergedList .add_in_tail(Node(node_1.value))
+                node_1 = node_1.next
+            while node_2 is not None:
+                mergedList .add_in_tail(Node(node_2.value))
+                node_2 = node_2.next
+        elif node_1.value >= node_1.next.value:
+            node_1 = list_1.tail
+            node_2 = list_2.tail
+            while node_1 is not None and node_2 is not None:
+                if node_1.value < node_2.value:
+                    mergedList .add_in_head(Node(node_1.value))
+                    node_1 = node_1.prev
+                if node_1.value >= node_2.value:
+                    mergedList .add_in_head(Node(node_2.value))
+                    node_2 = node_2.prev
+            while node_1 is not None:
+                mergedList .add_in_head(Node(node_1.value))
+                node_1 = node_1.prev
+            while node_2 is not None:
+                mergedList .add_in_head(Node(node_2.value))
+                node_2 = node_2.prev
+        return mergedList
 
 class OrderedStringList(OrderedList):
     def __init__(self, asc):
@@ -136,3 +185,18 @@ class OrderedStringList(OrderedList):
         if v1.strip() == v2.strip():
             return 0
         return 1
+
+
+list_1 = OrderedList(True)
+list_2 = OrderedList(True)
+list_1.add('1')
+list_1.add(Node('2'))
+list_1.add(Node('3'))
+list_1.add(Node('4'))
+list_1.add(Node('5'))
+list_2.add(Node('10'))
+list_2.add(Node('11'))
+list_2.add(Node('12'))
+list_2.add(Node('13'))
+list_2.add(Node('14'))
+print(mergeTwoLists(list_1, list_2))
