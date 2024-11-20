@@ -98,18 +98,13 @@ class Deque:
         return self.deque_2[0] if self.deque_2 else None
 
     def bracketsBalance(self):
+        matching_brackets = {')': '(', '}': '{', ']': '['}
         length = self.size()
         for i in range(self.size()):
-            if self.deque[i] == '(' or self.deque[i] == '[' or self.deque[i] == "{":
+            if self.deque[i] in matching_brackets.values():
                 self.addTail(self.deque[i])
-            elif self.deque[i] == ')':
-                if self.size() == length or self.removeTail() != '(':
-                    return False
-            elif self.deque[i] == ']':
-                if  self.size() == length or  self.removeTail() != '[':
-                    return False
-            elif self.deque[i] == '}':
-                if  self.size() == length or  self.removeTail() != '{' :
+            else:
+                if self.size() == length or self.removeTail() != matching_brackets[self.deque[i]]:
                     return False
         return self.size() == length
 
