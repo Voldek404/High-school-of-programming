@@ -187,7 +187,6 @@ class OrderedList:
             node = node.next
         return max(duplicatesCounter, key=duplicatesCounter.get)
 
-
 class OrderedStringList(OrderedList):
     def __init__(self, asc):
         super(OrderedStringList, self).__init__(asc)
@@ -198,6 +197,3 @@ class OrderedStringList(OrderedList):
         if v1.strip() == v2.strip():
             return 0
         return 1
-
-
-
