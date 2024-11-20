@@ -178,13 +178,14 @@ class OrderedList:
     def mostDuplicated(self):
         duplicatesCounter = {}
         node = self.head
-        duplicatesCounter[node.value] =0
+        duplicatesCounter[node.value] =1
         while node is not None and node.next is not None:
-            if node.next.value == node.value:
+            if node.value in duplicatesCounter:
                 duplicatesCounter[node.value] += 1
             else:
-                node = node.next
-        return duplicatesCounter
+                duplicatesCounter[node.value] = 1
+            node = node.next
+        return max(duplicatesCounter, key=duplicatesCounter.get), duplicatesCounter
 
 class OrderedStringList(OrderedList):
     def __init__(self, asc):
