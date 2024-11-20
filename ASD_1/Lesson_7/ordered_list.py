@@ -187,6 +187,20 @@ class OrderedList:
             node = node.next
         return max(duplicatesCounter, key=duplicatesCounter.get)
 
+    def isSublist(self, sublist):
+        node = self.head
+        subNode = sublist.head
+        while node is not None:
+            current = node
+            while current is not None and subNode is not None and current.value == subNode.value:
+                current = current.next
+                subNode = subNode.next
+            if subNode is None:
+                return True
+            subNode = sublist.head
+            node = node.next
+        return False
+
 class OrderedStringList(OrderedList):
     def __init__(self, asc):
         super(OrderedStringList, self).__init__(asc)
@@ -197,3 +211,5 @@ class OrderedStringList(OrderedList):
         if v1.strip() == v2.strip():
             return 0
         return 1
+
+
