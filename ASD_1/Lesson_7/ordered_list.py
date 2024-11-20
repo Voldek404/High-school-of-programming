@@ -175,6 +175,17 @@ class OrderedList:
                 node_2 = node_2.prev
         return mergedList
 
+    def mostDuplicated(self):
+        duplicatesCounter = {}
+        node = self.head
+        duplicatesCounter[node.value] =0
+        while node is not None and node.next is not None:
+            if node.next.value == node.value:
+                duplicatesCounter[node.value] += 1
+            else:
+                node = node.next
+        return duplicatesCounter
+
 class OrderedStringList(OrderedList):
     def __init__(self, asc):
         super(OrderedStringList, self).__init__(asc)
@@ -187,16 +198,4 @@ class OrderedStringList(OrderedList):
         return 1
 
 
-list_1 = OrderedList(True)
-list_2 = OrderedList(True)
-list_1.add('1')
-list_1.add(Node('2'))
-list_1.add(Node('3'))
-list_1.add(Node('4'))
-list_1.add(Node('5'))
-list_2.add(Node('10'))
-list_2.add(Node('11'))
-list_2.add(Node('12'))
-list_2.add(Node('13'))
-list_2.add(Node('14'))
-print(mergeTwoLists(list_1, list_2))
+
