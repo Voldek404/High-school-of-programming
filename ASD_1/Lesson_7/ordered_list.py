@@ -133,7 +133,7 @@ class OrderedList:
             else:
                 node = node.next
 
-        def mergeTwoLists(self, list_1, list_2, asc=True):
+    def mergeTwoLists(self, list_1, list_2, asc=True):
         list_1.deleteDuplicates()
         list_2.deleteDuplicates()
         mergedList = OrderedList(asc)
