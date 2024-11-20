@@ -99,14 +99,15 @@ class Deque:
 
     def bracketsBalance(self):
         matching_brackets = {')': '(', '}': '{', ']': '['}
-        length = self.size()
+        self.deque_3 = DynArray()
         for i in range(self.size()):
             if self.deque[i] in matching_brackets.values():
-                self.addTail(self.deque[i])
+                self.deque_3.append(self.deque[i])
             else:
-                if self.size() == length or self.removeTail() != matching_brackets[self.deque[i]]:
+                if self.deque_3.len() == 0 or self.deque_3[self.deque_3.len() - 1] != matching_brackets[self.deque[i]]:
                     return False
-        return self.size() == length
+                self.deque_3.delete(self.deque_3.len() - 1)
+        return self.deque_3.len() == 0
 
 
 def isPalindrome_helper(self, index):
@@ -125,8 +126,8 @@ def isPalindrome(self):
 
 deq = Deque()
 deq.addFront("(")
-deq.addTail("(")
-deq.addTail(")")
+deq.addTail("{")
+deq.addTail("}")
 deq.addTail(")")
 
 print(deq.bracketsBalance())
