@@ -134,8 +134,6 @@ class OrderedList:
                 node = node.next
 
     def mergeTwoLists(self, list_1, list_2, asc=True):
-        list_1.deleteDuplicates()
-        list_2.deleteDuplicates()
         mergedList = OrderedList(asc)
         if list_1.head is None:
             return list_2
@@ -200,6 +198,23 @@ class OrderedList:
             subNode = sublist.head
             node = node.next
         return False
+
+    def findIndex(self, val):
+        node = self.head
+        elements = []
+        while node is not None:
+            elements.append(node.value)
+            node = node.next
+        left, right = 0, len(elements) - 1
+        while left <= right:
+            mid = (left + right) // 2
+            if elements[mid] == val:
+                return mid
+            elif self.compare(elements[mid], val) < 0:
+                left = mid + 1
+            else:
+                right = mid - 1
+        return -1
 
 class OrderedStringList(OrderedList):
     def __init__(self, asc):
