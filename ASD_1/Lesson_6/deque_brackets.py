@@ -97,37 +97,32 @@ class Deque:
     def getMin(self):
         return self.deque_2[0] if self.deque_2 else None
 
-    def bracketsBalance(self):
+    @staticmethod
+    def bracketsBalance(string):
         matching_brackets = {')': '(', '}': '{', ']': '['}
-        self.deque_3 = DynArray()
-        for i in range(self.size()):
-            if self.deque[i] in matching_brackets.values():
-                self.deque_3.append(self.deque[i])
-            else:
-                if self.deque_3.len() == 0 or self.deque_3[self.deque_3.len() - 1] != matching_brackets[self.deque[i]]:
+        stack = []
+        for i in string:
+            if i in matching_brackets:
+                if not stack or stack[-1] != matching_brackets[i]:
                     return False
-                self.deque_3.delete(self.deque_3.len() - 1)
-        return self.deque_3.len() == 0
+                stack.pop()
+            else:
+                stack.append(i)
+        return len(stack) == 0
 
 
-def isPalindrome_helper(self, index):
-    if self.size() == 0:
-        return False
-    if index == self.size() // 2:
-        return True
-    if self.deque[index] != self.deque[self.size() - index - 1]:
-        return False
-    return self.isPalindrome_helper(index + 1)
+    def isPalindrome_helper(self, index):
+        if self.size() == 0:
+            return False
+        if index == self.size() // 2:
+            return True
+        if self.deque[index] != self.deque[self.size() - index - 1]:
+            return False
+        return self.isPalindrome_helper(index + 1)
 
 
-def isPalindrome(self):
-    return self.isPalindrome_helper(0)
+    def isPalindrome(self):
+        return self.isPalindrome_helper(0)
 
 
-deq = Deque()
-deq.addFront("(")
-deq.addTail("{")
-deq.addTail("}")
-deq.addTail(")")
 
-print(deq.bracketsBalance())
