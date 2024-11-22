@@ -1,3 +1,19 @@
+class HashTable:
+    def __init__(self, size):
+        self.size = size
+        self.table = [0] * self.size
+
+    def add(self, value):
+        index = hash(value) % self.size
+        if self.table[index] == 0:
+            self.table[index] = 1
+        else:
+            self.table[index] += 1
+
+    def find(self, value):
+        index = hash(value) % self.size
+        return self.table[index] > 0
+
 class Node:
     def __init__(self, v):
         self.value = v
@@ -139,65 +155,56 @@ class OrderedList:
             return list_2
         if list_2.head is None:
             return list_1
-        node_1 = list_1.head
-        node_2 = list_2.head
-        if asc:
-            while node_1 is not None and node_2 is not None:
-                if node_1.value < node_2.value:
-                    mergedList.add(node_1.value)
-                    node_1 = node_1.next
-                else:
-                    mergedList.add(node_2.value)
-                    node_2 = node_2.next
-            while node_1 is not None:
-                mergedList.add(node_1.value)
-                node_1 = node_1.next
-            while node_2 is not None:
-                mergedList.add(node_2.value)
-                node_2 = node_2.next
-        else:
-            node_1 = list_1.tail
-            node_2 = list_2.tail
-            while node_1 is not None and node_2 is not None:
-                if node_1.value > node_2.value:
-                    mergedList.add_in_head(node_1.value)
-                    node_1 = node_1.prev
-                else:
-                    mergedList.add_in_head(node_2.value)
-                    node_2 = node_2.prev
-            while node_1 is not None:
-                mergedList.add_in_head(node_1.value)
-                node_1 = node_1.prev
-            while node_2 is not None:
-                mergedList.add_in_head(node_2.value)
-                node_2 = node_2.prev
+        node_1 = list_1.head if asc else list_1.tail
+        node_2 = list_2.head if asc else list_2.tail
+        add_method = mergedList.add if asc else mergedList.add_in_head
+        while node_1 is not None and node_2 is not None:
+            if (node_1.value <= node_2.value if asc else node_1.value >= node_2.value):
+                add_method(node_1.value)
+                node_1 = node_1.next if asc else node_1.prev
+            else:
+                add_method(node_2.value)
+                node_2 = node_2.next if asc else node_2.prev
+        while node_1 is not None:
+            add_method(node_1.value)
+            node_1 = node_1.next if asc else node_1.prev
+        while node_2 is not None:
+            add_method(node_2.value)
+            node_2 = node_2.next if asc else node_2.prev
         return mergedList
 
     def mostDuplicated(self):
         duplicatesCounter = {}
         node = self.head
-        duplicatesCounter[node.value] = 0
         while node is not None:
-            if node.value in duplicatesCounter:
-                duplicatesCounter[node.value] += 1
-            else:
-                duplicatesCounter[node.value] = 1
+            value = node.value
+            count = duplicatesCounter.get(value, 0) + 1
+            duplicatesCounter[value] = count
             node = node.next
         return max(duplicatesCounter, key=duplicatesCounter.get)
 
     def isSublist(self, sublist):
+        if sublist is None:
+            return 0
         node = self.head
-        subNode = sublist.head
+        sublist_node = sublist.head
+        start_index = -1
+        index = 0
         while node is not None:
-            current = node
-            while current is not None and subNode is not None and current.value == subNode.value:
-                current = current.next
-                subNode = subNode.next
-            if subNode is None:
-                return True
-            subNode = sublist.head
+            if node.value == sublist.value:
+                if start_index == -1:
+                    start_index = index
+                sublist_node = sublist_node.next
+                if sublist_node is None:
+                    return start_index
+            else:
+                if start_index != -1:
+                    sublist = sublist.head
+                    start_index = -1
             node = node.next
-        return False
+            index += 1
+        return -1
+
 
     def findIndex(self, val):
         node = self.head
@@ -226,5 +233,9 @@ class OrderedStringList(OrderedList):
         if v1.strip() == v2.strip():
             return 0
         return 1
+
+
+
+
 
 
