@@ -33,7 +33,7 @@ class HashTable:
     def put(self, value):
         index_to_insert = self.seek_slot(value)
         if index_to_insert is None:
-            return None
+            index_to_insert = self.twoFoo(value)
         self.slots[index_to_insert] = value
         self.item_count += 1
         return index_to_insert
