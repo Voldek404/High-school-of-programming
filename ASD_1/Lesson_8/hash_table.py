@@ -76,3 +76,9 @@ class HashTable:
             while self.slots[index] is not None:
                 index = self.twoFooHelper(index, step)
             self.slots[index] = value
+
+    def addSalt(self, value):
+        salt_value = int(random.random() * 256)
+        salted_value = value + salt_value
+        self.put(salted_value)
+        return salted_value
