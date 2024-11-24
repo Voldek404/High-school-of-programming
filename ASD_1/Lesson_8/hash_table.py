@@ -32,10 +32,8 @@ class HashTable:
 
     def put(self, value):
         index_to_insert = self.seek_slot(value)
-
         if index_to_insert is None:
             return None
-
         self.slots[index_to_insert] = value
         self.item_count += 1
         return index_to_insert
@@ -53,3 +51,28 @@ class HashTable:
             if index == hash:
                 return None
         return None
+
+    def resizeAndNew(self):
+        if self.item_count >= self.size * 0.75:
+            new_size = self.size * 2
+            new_step = self.step * 2
+            new_hash_table = HashTable(new_size, new_step)
+            for i in range(self.size):
+                if self.slots[i] is not None:
+                    new_hash_table.put(self.slots[i])
+            self.size = new_size
+            self.step = new_step
+            self.slots = new_hash_table.slots
+            self.item_count = new_hash_table.item_count
+
+    def twoFooHelper(self, index, step):
+        index = (index + step) % self.size
+        return index
+
+    def twoFoo(self, value):
+        step = 2
+        if self.find(value) is None:
+            index = self.hash_fun(value)
+            while self.slots[index] is not None:
+                index = self.twoFooHelper(index, step)
+            self.slots[index] = value
