@@ -184,26 +184,25 @@ class OrderedList:
         return max(duplicatesCounter, key=duplicatesCounter.get)
 
     def isSublist(self, sublist):
-        if sublist is None:
-            return 0
         node = self.head
-        sublist_node = sublist.head
-        start_index = -1
-        index = 0
+        subNode = sublist.head
         while node is not None:
-            if node.value == sublist.value:
-                if start_index == -1:
-                    start_index = index
-                sublist_node = sublist_node.next
-                if sublist_node is None:
-                    return start_index
-            else:
-                if start_index != -1:
-                    sublist = sublist.head
-                    start_index = -1
+            if node.value == subNode.value:
+                current_node = node
+                current_sublist_node = subNode
+                if current_node.next != current_sublist_node.next:
+                    return False
+                while current_node is not None and current_sublist_node is not None:
+                    if current_node.value != current_sublist_node.value:
+                        break
+                    current_node = current_node.next
+                    current_sublist_node = current_sublist_node.next
+                if current_sublist_node is None:
+                    return True
+            if node.value > subNode.value:
+                break
             node = node.next
-            index += 1
-        return -1
+        return False
 
 
     def findIndex(self, val):
