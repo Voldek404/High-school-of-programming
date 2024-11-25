@@ -186,22 +186,19 @@ class OrderedList:
     def isSublist(self, sublist):
         node = self.head
         subNode = sublist.head
+        index = 0
         while node is not None:
             if node.value == subNode.value:
-                current_node = node
-                current_sublist_node = subNode
-                if current_node.next != current_sublist_node.next:
-                    return False
-                while current_node is not None and current_sublist_node is not None:
-                    if current_node.value != current_sublist_node.value:
-                        break
-                    current_node = current_node.next
-                    current_sublist_node = current_sublist_node.next
-                if current_sublist_node is None:
+                node = node.next
+                subNode = subNode.next
+                index += 1
+                if index == sublist.len():
                     return True
-            if node.value > subNode.value:
-                break
-            node = node.next
+            elif node.value != subNode.value:
+                subNode = sublist.head
+                index = 0
+                node = node.next
+            print(index)
         return False
 
 
