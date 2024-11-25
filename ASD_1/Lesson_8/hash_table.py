@@ -82,3 +82,8 @@ class HashTable:
         salted_value = value + salt_value
         self.put(salted_value)
         return salted_value
+
+    def ddos_with_equal_keys(self):
+        keys = ['qq', 'aa', 'bb', 'cc', 'dd', 'ee','vv', 'ww','xx', 'yy', 'zz']
+        for key in keys:
+            self.addSalt(key)
