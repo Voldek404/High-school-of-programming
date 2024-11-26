@@ -52,3 +52,11 @@ class PowerSet:
             if i not in self.slots:
                 return False
         return True
+
+    def equals(self, set2: PowerSet) -> bool:
+        if len(self.slots) != len(set2.slots):
+            return False
+        for element in self.slots:
+            if element not in set2.slots:
+                return False
+        return True
