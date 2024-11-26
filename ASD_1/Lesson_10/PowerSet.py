@@ -53,7 +53,7 @@ class PowerSet:
                 return False
         return True
 
-    def equals(self, set2: PowerSet) -> bool:
+    def equals(self, set2):
         if len(self.slots) != len(set2.slots):
             return False
         for element in self.slots:
