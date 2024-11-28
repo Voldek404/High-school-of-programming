@@ -18,7 +18,7 @@ class OrderedDictFromList:
             mid = (left + right) // 2
             mid_key = self.data[mid][0]
             if mid_key == key:
-                return mid
+                return mid, self.data[mid][1]
             elif mid_key < key:
                 left = mid + 1
             else:
