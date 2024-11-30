@@ -47,7 +47,7 @@ class PowerSet:
 
         return result
 
-    def issubset(self, set2):
+    def isSubSet(self, set2):
         for i in set2.slots:
             if i not in self.slots:
                 return False
