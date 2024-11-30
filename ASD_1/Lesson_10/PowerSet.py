@@ -60,3 +60,23 @@ class PowerSet:
             if element not in set2.slots:
                 return False
         return True
+
+    def decartSet(self, set2):
+        set3 = PowerSet()
+        for i in self.slots:
+            for j in set2.slots:
+                set3.put((i, j))
+        return set3
+
+    def twoPlusIntersections(self, sets: list[set]):
+        if any(len(sub_set) == 0 for sub_set in sets):
+            return PowerSet()
+        intersections_result = PowerSet()
+        for element in self.slots:
+            intersection_counter = 0
+            for sub_set in sets:
+                if element in sub_set:
+                    intersection_counter += 1
+            if intersection_counter == len(sets):
+                intersections_result.put(element)
+        return intersections_result
