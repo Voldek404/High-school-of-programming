@@ -69,7 +69,7 @@ class PowerSet:
         return set3
 
 def twoPlusIntersections(main_set, sets: list[PowerSet]):
-    if any(len(sub_set) == 0 for sub_set in sets):
+    if any(sub_set.size() == 0 for sub_set in sets):
         return PowerSet()
     intersections_result = PowerSet()
     for element in main_set:
