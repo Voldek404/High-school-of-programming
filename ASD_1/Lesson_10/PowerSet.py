@@ -68,15 +68,15 @@ class PowerSet:
                 set3.put((i, j))
         return set3
 
-    def twoPlusIntersections(self, sets: list[set]):
-        if any(len(sub_set) == 0 for sub_set in sets):
-            return PowerSet()
-        intersections_result = PowerSet()
-        for element in self.slots:
-            intersection_counter = 0
-            for sub_set in sets:
-                if element in sub_set:
-                    intersection_counter += 1
-            if intersection_counter == len(sets):
-                intersections_result.put(element)
-        return intersections_result
+def twoPlusIntersections(main_set, sets: list[PowerSet]):
+    if any(len(sub_set) == 0 for sub_set in sets):
+        return PowerSet()
+    intersections_result = PowerSet()
+    for element in main_set:
+        intersection_counter = 0
+        for sub_set in sets:
+            if element in sub_set:
+                intersection_counter += 1
+        if intersection_counter == len(sets):
+            intersections_result.put(element)
+    return intersections_result
