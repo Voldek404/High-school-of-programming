@@ -82,7 +82,7 @@ def twoPlusIntersections(main_set, sets: list):
 
 def multipleSetsIntersection(sets: list):
     result = sets[0]
-    for i in range(1, len[sets] - 1):
+    for i in range(1, len(sets)):
         result = result.intersection(sets[i])
     return result
 
