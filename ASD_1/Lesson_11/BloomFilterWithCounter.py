@@ -1,10 +1,10 @@
 class BloomFilterWithCounter:
-
     def __init__(self, f_len, numberOfHashFoos, counter_size):
         self.filter_len = f_len
         self.counter_size = counter_size
         self.numberOfHashFoos = numberOfHashFoos
         self.bit_array = []
+        self.added_elements = set()
         for i in range(self.filter_len):
             count = bitarray(self.counter_size)
             count.setall(0)
@@ -18,6 +18,9 @@ class BloomFilterWithCounter:
         return (result + salt) % self.filter_len
 
     def add(self, str1):
+        if str1 not in self.added_elements:
+            self.added_elements.add(str1)
+
         for i in range(self.numberOfHashFoos):
             salt = i
             index = self.hash(str1, salt)
@@ -39,13 +42,12 @@ class BloomFilterWithCounter:
             current_value = 0
             for bit in bit_array:
                 current_value = (current_value << 1) | bit
-            new_value = current_value + 1
             if current_value == 0:
                 return False
         return True
 
     def remove(self, str1):
-        if (self.check(str1)):
+        if str1 in self.added_elements:
             for i in range(self.numberOfHashFoos):
                 salt = i
                 index = self.hash(str1, salt)
@@ -59,4 +61,4 @@ class BloomFilterWithCounter:
                     for j in range(len(bit_array)):
                         new_bit_array.append((new_value >> (len(bit_array) - j - 1)) & 1)
                     self.bit_array[index] = new_bit_array
-
+            self.added_elements.remove(str1)
