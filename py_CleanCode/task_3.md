@@ -57,25 +57,25 @@
 
 
 ## 7.5 Временные переменные
-1) initial_demand = total_capacity
-queue = deque()
-for i in range(100):  # 100 шагов (например, для 100 минут или секунд)
-    demand_random_changer = np.random.choice(np.arange(0, 1.0, 0.05))
-    demand = demand_random_changer *  initial_demand
-//Временная переменная initial_demand создавалась для отделения процесса от общей мощности total_capacity, однако после проведенного анализа стало ясно, что переменная целиком лишняя
+1) initial_demand = total_capacity\
+queue = deque()\
+for i in range(100):  # 100 шагов (например, для 100 минут или секунд)\
+    demand_random_changer = np.random.choice(np.arange(0, 1.0, 0.05))\
+    demand = demand_random_changer *  initial_demand\
+//Временная переменная initial_demand создавалась для отделения процесса от общей мощности \total_capacity, однако после проведенного анализа стало ясно, что переменная целиком лишняя
 
 2) temp - temporary_list, temporary_string
 // чаще всего временные переменные в моем коде именовались просто как temp, что было не совсем наглядно
 
 3) 
 training_space = []
-for i in range(1, N + 1):
-    a1 = []
-    for j in range(1, M + 1):
-        a1.append(0)
-    training_space.append(a1)
+for i in range(1, N + 1):\
+    a1 = []\
+    for j in range(1, M + 1):\
+        a1.append(0)\
+    training_space.append(a1)\
 // еще одна лишняя временная переменная а1. Можно обойтись без нее
-training_space = [] 
-for i in range(1, N + 1):
+training_space = [] \
+for i in range(1, N + 1):\
     training_space.append([0] * M)
 
