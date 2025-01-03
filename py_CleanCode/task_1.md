@@ -1,5 +1,5 @@
 ## Task_1. Changing variables' names according to Clean Code 
-
+ 
 tip - type_of_currency_transformer 
 // тип трансформатора тока
 
