@@ -69,10 +69,10 @@ for i in range(100):  # 100 шагов (например, для 100 минут 
 
 3) 
 training_space = []
-for i in range(1, N + 1):\
-    a1 = []\
-    for j in range(1, M + 1):\
-        a1.append(0)\
+    for i in range(1, N + 1):\
+        a1 = []\
+        for j in range(1, M + 1):\
+            a1.append(0)\
     training_space.append(a1)\
 // еще одна лишняя временная переменная а1. Можно обойтись без нее
 training_space = [] \
