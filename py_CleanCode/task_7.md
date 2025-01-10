@@ -34,7 +34,6 @@ class Rectangle:
 
 ## 3.2. Ранее абстрактные классы не использовал. Пример с Гугла
 
-```python
 from abc import ABC, abstractmethod
 
 # Абстрактный класс (интерфейс)
