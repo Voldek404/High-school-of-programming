@@ -31,7 +31,7 @@ class Rectangle:
 
     def __str__(self):
         return f"Rectangle(length={self.length}, width={self.width})"
-```python
+```
 
 ## 3.2. Ранее абстрактные классы не использовал. Пример с Гугла
 
