@@ -32,27 +32,29 @@ class Rectangle:
 
 ## 3.2. Ранее абстрактные классы не использовал. Пример с Гугла
 
+```python
 from abc import ABC, abstractmethod
 
 # Абстрактный класс (интерфейс)
-class ShapeFactory(ABC):
+class Shape(ABC):
     @abstractmethod
-    def create_shape(self):
-        pass
+    def draw(self):
+        pass  # Метод должен быть реализован в дочернем классе
 
-# Конкретная реализация интерфейса
-class CircleFactory(ShapeFactory):
-    def create_shape(self):
-        return Circle()
+    @abstractmethod
+    def area(self):
+        pass  # Метод должен быть реализован в дочернем классе
 
-class Circle:
-    def __init__(self):
-        self.name = "Circle"
-    
-    def __str__(self):
-        return self.name
+# Реализация интерфейса
+class Circle(Shape):
+    def __init__(self, radius):
+        self.radius = radius
 
+    def draw(self):
+        return f"Drawing a circle with radius {self.radius}"
 
+    def area(self):
+        return 3.14 * self.radius ** 2
 
 
 
