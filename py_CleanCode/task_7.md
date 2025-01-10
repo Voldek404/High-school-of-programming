@@ -34,20 +34,20 @@ class Rectangle:
 
 from abc import ABC, abstractmethod
 
-
-class ShapeFactory(ABC):\
-    @abstractmethod\
-    def create_shape(self):\
+# Абстрактный класс (интерфейс)
+class ShapeFactory(ABC):
+    @abstractmethod
+    def create_shape(self):
         pass
 
+# Конкретная реализация интерфейса
+class CircleFactory(ShapeFactory):
+    def create_shape(self):
+        return Circle()
 
-class CircleFactory(ShapeFactory):\
-    def create_shape(self):\
-        return Circle()\
-
-class Circle:\
-    def __init__(self):\
-        self.name = "Circle"\
+class Circle:
+    def __init__(self):
+        self.name = "Circle"
     
     def __str__(self):
         return self.name
