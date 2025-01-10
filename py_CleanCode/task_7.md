@@ -30,26 +30,27 @@ class Rectangle:
     def __str__(self):
         return f"Rectangle(length={self.length}, width={self.width})"
 
-# Пример использования:
+## 3.2. Ранее абстрактные классы не использовал. Пример с Гугла
 
-# 1. Создание квадрата с длиной стороны 4
-square = Rectangle.from_side(4)
-print(square)  # Rectangle(length=4, width=4)
+from abc import ABC, abstractmethod
 
-# 2. Создание прямоугольника с длиной 6 и шириной 3
-rect1 = Rectangle.from_dimensions(6, 3)
-print(rect1)  # Rectangle(length=6, width=3)
 
-# 3. Создание прямоугольника с параметрами по умолчанию
-rect2 = Rectangle.from_default()
-print(rect2)  # Rectangle(length=5, width=3)
+class ShapeFactory(ABC):
+    @abstractmethod
+    def create_shape(self):
+        pass
 
-# 4. Создание прямоугольника с дополнительной логикой: если длина < ширина, они меняются местами
-rect3 = Rectangle.from_default(length=2, width=6)
-print(rect3)  # Rectangle(length=6, width=2)
 
-# Пример расчета площади
-print(f"Area of rect1: {rect1.area()}")  # Area of rect1: 18
+class CircleFactory(ShapeFactory):
+    def create_shape(self):
+        return Circle()
+
+class Circle:
+    def __init__(self):
+        self.name = "Circle"
+    
+    def __str__(self):
+        return self.name
 
 
 
