@@ -1,7 +1,7 @@
 # Task 7. ООП и интерфейсы
 
 3.1. \
-class Rectangle:
+class Rectangle:\
     def __init__(self, length, width):
         self.length = length
         self.width = width
