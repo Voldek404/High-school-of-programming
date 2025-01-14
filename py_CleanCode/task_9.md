@@ -39,12 +39,13 @@ testConclusion = pValue >= P_VALUE_THRESHOLD
 5)
 
 ```python
-  if village.count(white_walker) >= 1 and village.index(white_walker) != 0 and village.index(white_walker) +3 != len(village)
-// if white_walker in village:
-       index = village.index(white_walker)
-       if index != 0 and index + 3 != len(village)
+result1 = current_string[index] if 0 <= index < len(current_string) else ''
+//
+result2 = current_string[index:index+1]
+
 ```
-Произведена оптимизация логического выражения, лишний вызов метода index упрощен
+Более лаконичная проверка вхождения индекса в строку
+
 
 6)
 
