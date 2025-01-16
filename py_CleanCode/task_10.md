@@ -137,7 +137,6 @@ for i in range(100):  # 100 шагов
     elif demand == 0:
         continue
     queue.append(demand)
-///
 ```
 
 
@@ -162,7 +161,7 @@ if len(string_2) > len(string_1):
 13)Обработка завершения работы с переменной, возвращаем ноль вместо пустой строки
 ```python
 result = result.lstrip('0')
-//
+///
 result = result.lstrip('0') 
 if result == '':  
     result = '0'
@@ -174,7 +173,7 @@ if result == '':
 def WordSearch(length, input_string, subs):
     search_list = []
     splitted_string = input_string.split()
-//
+///
 if not input_string.strip():
     raise ValueError("Input string cannot be empty or only contain spaces.")
 
