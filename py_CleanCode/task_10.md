@@ -61,11 +61,10 @@ def TheRabbitsFoot(s, encode):
     if encode:
         s = s.replace(' ', '')
 ///
-
-```
 def TheRabbitsFoot(s, encode):
     if encode:
         s_replaced = s.replace(' ', '')
+```
 
 5) Добавлена обработка инварианта для программы с пользровательским интерфейсом ввода числа, по условиям задачи целого
 ```python
