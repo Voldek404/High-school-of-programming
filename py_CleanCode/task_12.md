@@ -31,7 +31,6 @@ def overlappingTemplateMachineTest_8(bitString: str, bitStringLength: int):
             raise ValueError("Длина битовой строки должна быть не менее 1000 бит.")
     except ValueError as e:
         return f"Ошибка: {e}, Test #8 False"
-    template = "1100"
     numberOfBlocks = 10
 
 
