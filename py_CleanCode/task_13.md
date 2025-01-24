@@ -66,8 +66,19 @@ for i in range(N - 1):
 
 ```
 
-5)
+5) Выполнена проверка границ выделяемой подматрицы. Организован более безопасный доступ к элементу, исключена ошибка при копипасте внешне схожих индексов i j.
 
 ```python
+for i in range(down_board):
+      for j in range(upper_board):
+            s_new += matrix[j][i]
+///
+for i, row in enumerate(matrix):  
+    if i >= down_board:
+        break  
+    for j, element in enumerate(row):  
+        if j >= upper_board:
+            break  
+        s_new += element
 
 ```
