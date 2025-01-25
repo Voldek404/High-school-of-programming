@@ -7,7 +7,8 @@
 ```python
 def getRandomNumbers(randomNumbersQRNG: int)/// def getRandomNumbersApi # функция для получения данных по API
 
-def getRandomNumbersLocal(randomNumbersLocal: int) /// def getRandomNumbersFromLib # функция для получения данных из встроенной библиотеки Питона
+def getRandomNumbersLocal(randomNumbersLocal: int) /// def getRandomNumbersFromLib # функция для получения 
+#данных из встроенной библиотеки Питона
 
 def getRandomNumbersUser(dataNumbers: str) /// def getRandomNumbersFromFile # функция для получения данных из файла локально
 
@@ -17,7 +18,8 @@ def getRandomNumbersUser(dataNumbers: str) /// def getRandomNumbersFromFile # ф
 
 ```python
 blockSize = bitStringLength ///  10
-numberOfBlocks = 10. #The blockSize  should be selected such that blockSize  ≥ 20, blockSize  > .01 bitStringLength and numberOfBlocks  < 100. 
+numberOfBlocks = 10. #The blockSize  should be selected such that 
+#blockSize  ≥ 20, blockSize  > .01 bitStringLength and numberOfBlocks  < 100. 
 
 ```
 
