@@ -19,7 +19,7 @@ SELECT
     	) AS retention_rate,
     ROUND(SUM(e.quality::DECIMAL) / NULLIF(COUNT(e.quality), 1), 2) AS avg_equipment_quality,
     COUNT(st.squad_id) AS total_training_sessions,
-    ROUND(AVG(st.effectiveness), 2) AS avg_training_effectiveness, --- добить
+    ROUND(AVG(st.effectiveness), 2) AS avg_training_effectiveness, 
     ROUND(CORR(st.frequency, sb.outcome), 2) AS training_battle_correlation,
     ROUND(AVG(sm.skill_improvement), 2) AS avg_combat_skill_improvement,
     ROUND(
