@@ -160,3 +160,43 @@ WHERE
     ms.squad_id = 403  -- Пример для одного отряда
 GROUP BY 
     ms.squad_id, ms.name;
+
+
+WITH defense_data AS (
+    SELECT 
+        f.fortress_id,
+        f.founded_year + 1 AS year,
+        COUNT(so.operation_id) FILTER (WHERE so.status = 'Success') * 100.0 / COUNT(so.operation_id) AS defense_success_rate,
+        COUNT(ca.attack_id) AS total_attacks,
+        SUM(sb.casualties) AS casualties
+    FROM 
+        FORTRESSES f
+    LEFT JOIN MILITARY_SQUADS ms ON f.fortress_id = ms.fortress_id
+    LEFT JOIN SQUAD_OPERATIONS so ON ms.squad_id = so.squad_id
+    LEFT JOIN CREATURE_ATTACKS ca ON ca.location = f.location AND EXTRACT(YEAR FROM ca.date) = f.founded_year + 1
+    LEFT JOIN SQUAD_BATTLES sb ON ms.squad_id = sb.squad_id AND EXTRACT(YEAR FROM sb.date) = f.founded_year + 1
+    GROUP BY f.fortress_id, f.founded_year
+),
+yearly_data AS (
+    SELECT 
+        year,
+        fortress_id,
+        defense_success_rate,
+        total_attacks,
+        casualties,
+        LAG(defense_success_rate) OVER (ORDER BY year) AS prev_defense_success_rate
+    FROM defense_data
+)
+SELECT
+    jsonb_agg(
+        jsonb_build_object(
+            'year', year,
+            'defense_success_rate', defense_success_rate,
+            'total_attacks', total_attacks,
+            'casualties', casualties,
+            'year_over_year_improvement', COALESCE(defense_success_rate - prev_defense_success_rate, 0) 
+        )
+    ) AS security_evolution
+FROM yearly_data
+GROUP BY fortress_id
+ORDER BY fortress_id, year;
