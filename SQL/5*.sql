@@ -92,3 +92,24 @@ LEFT JOIN
 
 GROUP BY 
     f.fortress_id;
+
+SELECT 
+    ms.fortress_id,
+    ms.formation_type AS defense_type,
+    (COUNT(so.operation_id) FILTER (WHERE so.status = 'Success') * 100.0 / COUNT(so.operation_id)) AS effectiveness_rate,
+    COALESCE(AVG(ca.casualties), 0) AS avg_enemy_casualties,
+    JSON_ARRAYAGG(ms.fortress_id) AS structure_ids
+FROM 
+    military_squads ms
+LEFT JOIN 
+    squad_operations so ON ms.squad_id = so.squad_id
+LEFT JOIN 
+    squad_battles sb ON ms.squad_id = sb.squad_id
+LEFT JOIN 
+    creature_attacks ca ON sb.battle_id = ca.battle_id
+GROUP BY 
+    ms.fortress_id, ms.formation_type
+ORDER BY 
+    ms.fortress_id;
+
+
