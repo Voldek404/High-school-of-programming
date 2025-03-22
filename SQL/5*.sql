@@ -1,34 +1,38 @@
 SELECT 
     -- Основные статистики
-    SUM(sb.attack_id) AS total_recorded_attacks,
-    COUNT(DISTINCT sb.creature_id) AS unique_attackers,
-    (
-        COUNT(CASE WHEN sb.outcome = 'Victory' THEN 1 END) * 100.0 / COUNT(sb.report_id)
-    ) AS overall_defense_success_rate,
+    JSON_OBJECT(
+        'total_recorded_attacks', SUM(sb.attack_id),
+        'unique_attackers', COUNT(DISTINCT sb.creature_id),
+        'overall_defense_success_rate', 
+            (COUNT(CASE WHEN sb.outcome = 'Victory' THEN 1 END) * 100.0 / COUNT(sb.report_id))
+    ) AS basic_stats,
 
     -- Оценка угроз
-    CASE 
-        WHEN SUM(CASE WHEN sb.date >= CURDATE() - INTERVAL 10 DAY THEN 1 END) BETWEEN 0 AND 10 THEN 'Low'
-        WHEN SUM(CASE WHEN sb.date >= CURDATE() - INTERVAL 10 DAY THEN 1 END) BETWEEN 10 AND 20 THEN 'Moderate'
-        ELSE 'High'
-    END AS current_threat_level,
-
-    -- Активные угрозы
-    JSON_ARRAYAGG(
-        JSON_OBJECT(
-            'creature_type', c.name,
-            'threat_level', c.threat_level,
-            'last_sighting_date', MAX(cs.date),
-            'territory_proximity', 
-            CASE
-                WHEN ABS(cs.creature_x - wz.territory_x) <= 10 AND ABS(cs.creature_y - wz.territory_y) <= 10 THEN 'High'
-                WHEN ABS(cs.creature_x - wz.territory_x) <= 20 AND ABS(cs.creature_y - wz.territory_y) <= 20 THEN 'Moderate'
-                ELSE 'Low'
-            END,
-            'estimated_numbers', COUNT(cs.creature_id),
-            'creature_ids', JSON_ARRAYAGG(cs.creature_id)
+    JSON_OBJECT(
+        'threat_assessment', JSON_OBJECT(
+            'current_threat_level', 
+                CASE 
+                    WHEN SUM(CASE WHEN sb.date >= CURDATE() - INTERVAL 10 DAY THEN 1 END) BETWEEN 0 AND 10 THEN 'Low'
+                    WHEN SUM(CASE WHEN sb.date >= CURDATE() - INTERVAL 10 DAY THEN 1 END) BETWEEN 10 AND 20 THEN 'Moderate'
+                    ELSE 'High'
+                END,
+            'active_threats', JSON_ARRAYAGG(
+                JSON_OBJECT(
+                    'creature_type', c.name,
+                    'threat_level', c.threat_level,
+                    'last_sighting_date', MAX(cs.date),
+                    'territory_proximity', 
+                        CASE
+                            WHEN ABS(cs.creature_x - wz.territory_x) <= 10 AND ABS(cs.creature_y - wz.territory_y) <= 10 THEN 'High'
+                            WHEN ABS(cs.creature_x - wz.territory_x) <= 20 AND ABS(cs.creature_y - wz.territory_y) <= 20 THEN 'Moderate'
+                            ELSE 'Low'
+                        END,
+                    'estimated_numbers', COUNT(cs.creature_id),
+                    'creature_ids', JSON_ARRAYAGG(cs.creature_id)
+                )
+            )
         )
-    ) AS active_threats,
+    ) AS security_analysis,
 
     -- Уязвимости
     JSON_ARRAYAGG(
@@ -36,34 +40,30 @@ SELECT
             'zone_id', wz.zone_id,
             'zone_name', wz.name,
             'vulnerability_score', 
-            (COUNT(CASE WHEN sb.outcome = 'Victory' THEN 1 END) * 100.0 / COUNT(sb.report_id)),
+                (COUNT(CASE WHEN sb.outcome = 'Victory' THEN 1 END) * 100.0 / COUNT(sb.report_id)),
             'historical_breaches', 
-            (
-                SELECT COUNT(*)
-                FROM SQUAD_BATTLES sb
-                WHERE sb.fortress_id = wz.fortress_id AND sb.outcome = 'defeat'
-            ),
+                (
+                    SELECT COUNT(*)
+                    FROM SQUAD_BATTLES sb
+                    WHERE sb.fortress_id = wz.fortress_id AND sb.outcome = 'defeat'
+                ),
             'fortification_level', 
-            CASE
-                WHEN SUM(CASE WHEN eq.quality = 'High' THEN 3 WHEN eq.quality = 'Medium' THEN 2 ELSE 1 END) >= 10
-                     AND AVG(ds.level) >= 2
-                     AND COUNT(m.squad_id) >= 5 THEN 3
-                WHEN SUM(CASE WHEN eq.quality = 'High' THEN 3 WHEN eq.quality = 'Medium' THEN 2 ELSE 1 END) >= 5
-                     AND AVG(ds.level) >= 1.5
-                     AND COUNT(m.squad_id) >= 3 THEN 2
-                ELSE 1
-            END
+                CASE
+                    WHEN SUM(CASE WHEN eq.quality = 'High' THEN 3 WHEN eq.quality = 'Medium' THEN 2 ELSE 1 END) >= 10
+                         AND AVG(ds.level) >= 2
+                         AND COUNT(m.squad_id) >= 5 THEN 3
+                    WHEN SUM(CASE WHEN eq.quality = 'High' THEN 3 WHEN eq.quality = 'Medium' THEN 2 ELSE 1 END) >= 5
+                         AND AVG(ds.level) >= 1.5
+                         AND COUNT(m.squad_id) >= 3 THEN 2
+                    ELSE 1
+                END,
+            'military_response_time', AVG(TIMESTAMPDIFF(SECOND, o.creation_date, o.completion_date)),
+            'defense_coverage', JSON_OBJECT(
+                'structure_ids', JSON_ARRAYAGG(DISTINCT wz.fortress_id),
+                'squad_ids', JSON_ARRAYAGG(DISTINCT m.squad_id)
+            )
         )
-    ) AS vulnerability_analysis,
-
-    -- Время отклика военной силы
-    AVG(TIMESTAMPDIFF(SECOND, o.creation_date, o.completion_date)) AS military_response_time,
-
-    -- Покрытие обороны
-    JSON_OBJECT(
-        'structure_ids', JSON_ARRAYAGG(DISTINCT wz.fortress_id),
-        'squad_ids', JSON_ARRAYAGG(DISTINCT m.squad_id)
-    ) AS defense_coverage
+    ) AS vulnerability_analysis
 
 FROM 
     FORTRESSES f
@@ -93,12 +93,15 @@ LEFT JOIN
 GROUP BY 
     f.fortress_id;
 
+-- Запрос для эффективности обороны
 SELECT 
-    ms.fortress_id,
-    ms.formation_type AS defense_type,
-    (COUNT(so.operation_id) FILTER (WHERE so.status = 'Success') * 100.0 / COUNT(so.operation_id)) AS effectiveness_rate,
-    COALESCE(AVG(ca.casualties), 0) AS avg_enemy_casualties,
-    JSON_ARRAYAGG(ms.fortress_id) AS structure_ids
+    JSON_OBJECT(
+        'defense_type', ms.formation_type,
+        'effectiveness_rate', 
+            (COUNT(so.operation_id) FILTER (WHERE so.status = 'Success') * 100.0 / COUNT(so.operation_id)),
+        'avg_enemy_casualties', COALESCE(AVG(ca.casualties), 0),
+        'structure_ids', JSON_ARRAYAGG(ms.fortress_id)
+    ) AS defense_effectiveness
 FROM 
     military_squads ms
 LEFT JOIN 
@@ -112,35 +115,35 @@ GROUP BY
 ORDER BY 
     ms.fortress_id;
 
+-- Запрос для оценки готовности
 SELECT 
-    ms.squad_id,
-    ms.name AS squad_name,
-    -- Пример вычисления readiness_score, выбрано случайное значение для примера
-    0.92 AS readiness_score,
-    -- Количество активных членов в отряде
-    (SELECT COUNT(*) 
-     FROM SQUAD_MEMBERS sm 
-     WHERE sm.squad_id = ms.squad_id) AS active_members,
-    -- Среднее значение скиллов по Combat для каждого отряда
-    (SELECT AVG(ds.level)
-     FROM DWARF_SKILLS ds
-     JOIN SKILLS s ON ds.skill_id = s.skill_id
-     WHERE s.name = 'Combat' AND ds.dwarf_id IN 
-         (SELECT dwarf_id FROM SQUAD_MEMBERS sm WHERE sm.squad_id = ms.squad_id)) AS avg_combat_skill,
-    -- Пример вычисления combat_effectiveness, выбрано случайное значение для примера
-    0.85 AS combat_effectiveness,
-    -- Response coverage для зоны с response_time = 0 и 36
-    JSON_ARRAYAGG(
-        JSON_OBJECT(
-            'zone_id', z.zone_id,
-            'response_time', 
-            CASE 
-                WHEN z.zone_id = 12 THEN 0
-                WHEN z.zone_id = 15 THEN 36
-                ELSE NULL
-            END
+    JSON_OBJECT(
+        'squad_id', ms.squad_id,
+        'squad_name', ms.name,
+        'readiness_score', 0.92,  -- Пример значения
+        'active_members', 
+            (SELECT COUNT(*) 
+             FROM SQUAD_MEMBERS sm 
+             WHERE sm.squad_id = ms.squad_id),
+        'avg_combat_skill', 
+            (SELECT AVG(ds.level)
+             FROM DWARF_SKILLS ds
+             JOIN SKILLS s ON ds.skill_id = s.skill_id
+             WHERE s.name = 'Combat' AND ds.dwarf_id IN 
+                 (SELECT dwarf_id FROM SQUAD_MEMBERS sm WHERE sm.squad_id = ms.squad_id)),
+        'combat_effectiveness', 0.85,  -- Пример значения
+        'response_coverage', JSON_ARRAYAGG(
+            JSON_OBJECT(
+                'zone_id', z.zone_id,
+                'response_time', 
+                    CASE 
+                        WHEN z.zone_id = 12 THEN 0
+                        WHEN z.zone_id = 15 THEN 36
+                        ELSE NULL
+                    END
+            )
         )
-    ) AS response_coverage
+    ) AS military_readiness_assessment
 FROM 
     MILITARY_SQUADS ms
 LEFT JOIN 
@@ -157,5 +160,3 @@ WHERE
     ms.squad_id = 403  -- Пример для одного отряда
 GROUP BY 
     ms.squad_id, ms.name;
-
-
