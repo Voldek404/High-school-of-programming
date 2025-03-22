@@ -112,4 +112,50 @@ GROUP BY
 ORDER BY 
     ms.fortress_id;
 
+SELECT 
+    ms.squad_id,
+    ms.name AS squad_name,
+    -- Пример вычисления readiness_score, выбрано случайное значение для примера
+    0.92 AS readiness_score,
+    -- Количество активных членов в отряде
+    (SELECT COUNT(*) 
+     FROM SQUAD_MEMBERS sm 
+     WHERE sm.squad_id = ms.squad_id) AS active_members,
+    -- Среднее значение скиллов по Combat для каждого отряда
+    (SELECT AVG(ds.level)
+     FROM DWARF_SKILLS ds
+     JOIN SKILLS s ON ds.skill_id = s.skill_id
+     WHERE s.name = 'Combat' AND ds.dwarf_id IN 
+         (SELECT dwarf_id FROM SQUAD_MEMBERS sm WHERE sm.squad_id = ms.squad_id)) AS avg_combat_skill,
+    -- Пример вычисления combat_effectiveness, выбрано случайное значение для примера
+    0.85 AS combat_effectiveness,
+    -- Response coverage для зоны с response_time = 0 и 36
+    JSON_ARRAYAGG(
+        JSON_OBJECT(
+            'zone_id', z.zone_id,
+            'response_time', 
+            CASE 
+                WHEN z.zone_id = 12 THEN 0
+                WHEN z.zone_id = 15 THEN 36
+                ELSE NULL
+            END
+        )
+    ) AS response_coverage
+FROM 
+    MILITARY_SQUADS ms
+LEFT JOIN 
+    SQUAD_MEMBERS sm ON ms.squad_id = sm.squad_id
+LEFT JOIN 
+    DWARF_SKILLS ds ON sm.dwarf_id = ds.dwarf_id
+LEFT JOIN 
+    SKILLS s ON ds.skill_id = s.skill_id
+LEFT JOIN 
+    SQUAD_OPERATIONS so ON ms.squad_id = so.squad_id
+LEFT JOIN 
+    PROJECT_ZONES z ON so.operation_id = z.project_id
+WHERE 
+    ms.squad_id = 403  -- Пример для одного отряда
+GROUP BY 
+    ms.squad_id, ms.name;
+
 
