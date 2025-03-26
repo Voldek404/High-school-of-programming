@@ -21,7 +21,8 @@ class SimpleTree:
                 else:
                     AddChildHelper(child)
                 return
-            return AddChildHelper(self.Root)
+
+        return AddChildHelper(self.Root)
 
     def DeleteNode(self, NodeToDelete):
         if self.Root is None:
@@ -72,12 +73,16 @@ class SimpleTree:
 
         def MoveNodeHelper(currentNode):
             for child in currentNode.Children:
+                if OriginalNode in child.Children:
+                    child.Children.remove(OriginalNode)
+                    break
+
+            for child in currentNode.Children:
                 if child == NewParent:
-                    NewParent.Children.append(child)
-                    self.DeleteNode(child)
-                else:
-                    MoveNodeHelper(child)
-                return
+                    child.Children.append(OriginalNode)
+                    return
+            for child in currentNode.Children:
+                MoveNodeHelper(child)
 
         return MoveNodeHelper(self.Root)
 
@@ -101,7 +106,7 @@ class SimpleTree:
         def LeafCountHelper(currentNode):
             count = 0
             if not currentNode.Children:
-                return 0
+                return 1
             for child in currentNode.Children:
                 count += LeafCountHelper(child)
             return count
