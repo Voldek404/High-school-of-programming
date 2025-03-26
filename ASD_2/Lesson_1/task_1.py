@@ -18,10 +18,9 @@ class SimpleTree:
             for child in currentNode.Children:
                 if child == ParentNode:
                     child.Children.append(NewChild)
-                    return
                 else:
                     AddChildHelper(child)
-                
+
         return AddChildHelper(self.Root)
 
     def DeleteNode(self, NodeToDelete):
