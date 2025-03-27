@@ -60,8 +60,7 @@ class SimpleTree:
             if currentNode.NodeValue == val:
                 nodesList.append(currentNode)
             for child in currentNode.Children:
-                if child.NodeValue == val:
-                    nodesList.append(child)
+                FindNodesHelper(child, nodesList)
             return nodesList
 
         return FindNodesHelper(self.Root, [])
@@ -72,16 +71,14 @@ class SimpleTree:
 
         def MoveNodeHelper(currentNode):
             for child in currentNode.Children:
-                if OriginalNode in child.Children:
-                    child.Children.remove(OriginalNode)
+                if child == OriginalNode:
+                    currentNode.Children.remove(child)
                     break
+                else:
+                    MoveNodeHelper(child)
 
-            for child in currentNode.Children:
-                if child == NewParent:
-                    child.Children.append(OriginalNode)
-                    return
-            for child in currentNode.Children:
-                MoveNodeHelper(child)
+            NewParent.Children.append(OriginalNode)
+            OriginalNode.Parent = NewParent
 
         return MoveNodeHelper(self.Root)
 
