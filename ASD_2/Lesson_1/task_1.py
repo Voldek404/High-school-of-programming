@@ -78,8 +78,8 @@ class SimpleTree:
                 else:
                     MoveNodeHelper(child)
 
-            NewParent.Children.append(OriginalNode)
-            OriginalNode.Parent = NewParent
+                NewParent.Children.append(OriginalNode)
+                OriginalNode.Parent = NewParent
 
         return MoveNodeHelper(self.Root)
 
