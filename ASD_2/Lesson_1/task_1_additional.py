@@ -110,7 +110,7 @@ class SimpleTree:
 
         return LeafCountHelper(self.Root)
 
-    def NodesCensus(self):
+    def NodesCensus(self) -> dict:
         if self.Root is None:
             return None
 
