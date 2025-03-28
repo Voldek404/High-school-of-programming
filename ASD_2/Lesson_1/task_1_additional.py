@@ -40,11 +40,11 @@ class SimpleTree:
 
         return DeleteNodeHelper(self.Root)
 
-    def GetAllNodes(self):
+    def GetAllNodes(self) -> List[SimpleTreeNode]:
         if self.Root is None:
             return []
 
-        def GetAllNodesHelper(currentNode, nodesList):
+        def GetAllNodesHelper(currentNode, nodesList: list) -> list:
             nodesList.append(currentNode)
             if currentNode.Children:
                 for child in currentNode.Children:
@@ -53,11 +53,11 @@ class SimpleTree:
 
         return GetAllNodesHelper(self.Root, [])
 
-    def FindNodesByValue(self, val):
+    def FindNodesByValue(self, val) -> list:
         if self.Root is None:
             return []
 
-        def FindNodesHelper(currentNode, nodesList):
+        def FindNodesHelper(currentNode, nodesList: list) -> list:
             if currentNode.NodeValue == val:
                 nodesList.append(currentNode)
             for child in currentNode.Children:
@@ -83,11 +83,11 @@ class SimpleTree:
 
         return MoveNodeHelper(self.Root)
 
-    def Count(self):
+    def Count(self) -> int:
         if self.Root is None:
             return 0
 
-        def CountHelper(currentNode):
+        def CountHelper(currentNode)-> int:
             count = 1
             if currentNode.Children:
                 for node in currentNode.Children:
@@ -96,7 +96,7 @@ class SimpleTree:
 
         return CountHelper(self.Root)
 
-    def LeafCount(self):
+    def LeafCount(self) -> int:
         if self.Root is None:
             return 0
 
@@ -116,7 +116,7 @@ class SimpleTree:
 
         nodes_dict = {}
 
-        def NodesCensusHelper(currentNode, level):
+        def NodesCensusHelper(currentNode, level: int):
             nodes_dict[currentNode] = level
             for child in currentNode.Children:
                 NodesCensusHelper(child, level + 1)
