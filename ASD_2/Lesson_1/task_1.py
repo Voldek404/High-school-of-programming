@@ -73,13 +73,12 @@ class SimpleTree:
         def MoveNodeHelper(currentNode):
             for child in currentNode.Children:
                 if child == OriginalNode:
+                    NewParent.Children.append(OriginalNode)
+                    OriginalNode.Parent = NewParent
                     currentNode.Children.remove(child)
                     break
                 else:
                     MoveNodeHelper(child)
-
-                NewParent.Children.append(OriginalNode)
-                OriginalNode.Parent = NewParent
 
         return MoveNodeHelper(self.Root)
 
