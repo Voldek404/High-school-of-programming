@@ -17,7 +17,7 @@ class SimpleTree:
        def AddChildHelper(currentNode):
         if currentNode == ParentNode:
             currentNode.Children.append(NewChild)
-            NewChild.Parent = currentNode  # <--- вот это
+            NewChild.Parent = currentNode  
             return
         for child in currentNode.Children:
             AddChildHelper(child)
