@@ -14,13 +14,13 @@ class SimpleTree:
             self.Root = NewChild
             return
 
-       def AddChildHelper(currentNode):
-        if currentNode == ParentNode:
-            currentNode.Children.append(NewChild)
-            NewChild.Parent = currentNode  
-            return
-        for child in currentNode.Children:
-            AddChildHelper(child)
+        def AddChildHelper(currentNode):
+            if currentNode == ParentNode:
+                currentNode.Children.append(NewChild)
+                NewChild.Parent = currentNode  
+                return
+            for child in currentNode.Children:
+                AddChildHelper(child)
             
         return AddChildHelper(self.Root)
 
