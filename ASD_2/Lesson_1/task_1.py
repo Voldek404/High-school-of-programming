@@ -6,8 +6,14 @@ class SimpleTreeNode:
 
 
 class SimpleTree:
-    def __init__(self, root):
+    def __init__(self, root, level):
         self.Root = root
+        self.Level = level
+
+    def updateSubtreeLevel(node, level):
+        node.level = level
+        for child in node.Children:
+            updateSubtreeLevel(child, level + 1)
 
     def AddChild(self, ParentNode, NewChild):
         if self.Root is None:
@@ -17,11 +23,11 @@ class SimpleTree:
         def AddChildHelper(currentNode):
             if currentNode == ParentNode:
                 currentNode.Children.append(NewChild)
-                NewChild.Parent = currentNode  
+                NewChild.Parent = currentNode
                 return
             for child in currentNode.Children:
                 AddChildHelper(child)
-            
+
         return AddChildHelper(self.Root)
 
     def DeleteNode(self, NodeToDelete):
@@ -73,13 +79,14 @@ class SimpleTree:
         def MoveNodeHelper(currentNode):
             for child in currentNode.Children:
                 if child == OriginalNode:
+                    NewParent.Children.append(OriginalNode)
+                    OriginalNode.level = currentNode.Level + 1
+                    updateSubtreeLevel(OriginalNode, OriginalNode.level)
+                    OriginalNode.Parent = NewParent
                     currentNode.Children.remove(child)
                     break
                 else:
                     MoveNodeHelper(child)
-
-            NewParent.Children.append(OriginalNode)
-            OriginalNode.Parent = NewParent
 
         return MoveNodeHelper(self.Root)
 
@@ -109,3 +116,52 @@ class SimpleTree:
             return count
 
         return LeafCountHelper(self.Root)
+    def NodesCensus(self):
+        if self.Root is None:
+            return None
+
+        nodes_dict = {}
+
+        def NodesCensusHelper(currentNode, level: int):
+            nodes_dict[currentNode] = level
+            for child in currentNode.Children:
+                NodesCensusHelper(child, level + 1)
+
+        NodesCensusHelper(self.Root, 0)
+        return nodes_dict
+
+    # Классы SimpleTreeNode и SimpleTree уже заданы выше
+
+    # Создание узлов
+root = SimpleTreeNode("root", None)
+child1 = SimpleTreeNode("child1", None)
+child2 = SimpleTreeNode("child2", None)
+child3 = SimpleTreeNode("child3", None)
+child4 = SimpleTreeNode("child4", None)
+
+    # Создание дерева
+tree = SimpleTree(root)
+
+    # Добавление детей
+tree.AddChild(root, child1)
+tree.AddChild(root, child2)
+tree.AddChild(child1, child3)
+tree.AddChild(child1, child4)
+
+    # Проверка GetAllNodes
+all_nodes = tree.GetAllNodes()
+print("All nodes in tree (before move):")
+for node in all_nodes:
+    print(f"Node: {node.NodeValue}, Parent: {node.Parent.NodeValue if node.Parent else None}")
+
+    # Перемещение узла child3 под child2
+tree.MoveNode(child1, child2)
+
+    # Проверка GetAllNodes после перемещения
+all_nodes_after_move = tree.GetAllNodes()
+print("\nAll nodes in tree (after move):")
+for node in all_nodes_after_move:
+    print(f"Node: {node.NodeValue}, Parent: {node.Parent.NodeValue if node.Parent else None}")
+dict_of_nodes = tree.NodesCensus()
+for key, value in dict_of_nodes.items():
+    print(f"{key}: {value}")
