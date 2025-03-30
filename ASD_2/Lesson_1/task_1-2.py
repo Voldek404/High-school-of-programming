@@ -6,8 +6,14 @@ class SimpleTreeNode:
 
 
 class SimpleTree:
-    def __init__(self, root):
+    def __init__(self, root, level):
         self.Root = root
+        self.Level = level
+
+    def updateSubtreeLevel(node, level):
+        node.level = level
+        for child in node.Children:
+            updateSubtreeLevel(child, level + 1)
 
     def AddChild(self, ParentNode, NewChild):
         if self.Root is None:
@@ -73,13 +79,14 @@ class SimpleTree:
         def MoveNodeHelper(currentNode):
             for child in currentNode.Children:
                 if child == OriginalNode:
+                    NewParent.Children.append(OriginalNode)
+                    OriginalNode.level = currentNode.Level + 1
+                    updateSubtreeLevel(OriginalNode, OriginalNode.level)
+                    OriginalNode.Parent = NewParent
                     currentNode.Children.remove(child)
                     break
                 else:
                     MoveNodeHelper(child)
-
-            NewParent.Children.append(OriginalNode)
-            OriginalNode.Parent = NewParent
 
         return MoveNodeHelper(self.Root)
 
@@ -110,7 +117,7 @@ class SimpleTree:
 
         return LeafCountHelper(self.Root)
 
-    def NodesCensus(self):
+    def NodesCensus(self) -> dict:
         if self.Root is None:
             return None
 
@@ -123,6 +130,3 @@ class SimpleTree:
 
         NodesCensusHelper(self.Root, 0)
         return nodes_dict
-
-
-
