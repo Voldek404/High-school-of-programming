@@ -78,6 +78,7 @@ class BST:
         node_to_delete = result.Node
         parent = node_to_delete.Parent
 
+        # 1. Узел не имеет детей
         if not node_to_delete.LeftChild and not node_to_delete.RightChild:
             if parent:
                 if parent.LeftChild == node_to_delete:
@@ -86,13 +87,10 @@ class BST:
                     parent.RightChild = None
             else:
                 self.Root = None
+
         # 2. Узел имеет только одного ребёнка
         elif not node_to_delete.LeftChild or not node_to_delete.RightChild:
-            child = (
-                node_to_delete.LeftChild
-                if node_to_delete.LeftChild
-                else node_to_delete.RightChild
-            )
+            child = node_to_delete.LeftChild if node_to_delete.LeftChild else node_to_delete.RightChild
 
             if parent:
                 if parent.LeftChild == node_to_delete:
@@ -105,17 +103,17 @@ class BST:
 
         # 3. Узел имеет двух детей
         else:
-            successor = self.FinMinMax(
-                node_to_delete.RightChild, False
-            )  # Минимальный узел в правом поддереве c использованием ранее выполненного метода
-            node_to_delete.Nodekey = successor.NodeKey
+            successor = self.FinMinMax(node_to_delete.RightChild, False)  # Минимальный узел в правом поддереве
+
+            node_to_delete.NodeKey = successor.NodeKey
             node_to_delete.NodeValue = successor.NodeValue
 
-            # Удаляем заменённый узел
+            # Если successor имеет правого ребенка, корректируем ссылки
             if successor.Parent.LeftChild == successor:
                 successor.Parent.LeftChild = successor.RightChild
             else:
                 successor.Parent.RightChild = successor.RightChild
+
             if successor.RightChild:
                 successor.RightChild.Parent = successor.Parent
 
