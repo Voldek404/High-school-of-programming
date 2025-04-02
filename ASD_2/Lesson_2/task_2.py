@@ -20,27 +20,25 @@ class BST:
 
     def FindNodeByKey(self, key):
         self.result = BSTFind()
-        if self.Root is None:
-            return self.result
+        currentNode = self.Root
+        parent = None
 
-        def FindNodeByKeyHelper(currentNode, NodeKey):
-            if not currentNode:
-                return self.result
+        while currentNode:
+            parent = currentNode
 
-            if currentNode.NodeKey == key:
+            if key == currentNode.NodeKey:
                 self.result.Node = currentNode
                 self.result.NodeHasKey = True
                 return self.result
 
-            self.result.ToLeft = key < currentNode.NodeKey
+            if key < currentNode.NodeKey:
+                self.result.ToLeft = True
+                currentNode = currentNode.LeftChild
+            else:
+                self.result.ToLeft = False
+                currentNode = currentNode.RightChild
 
-            if currentNode.NodeKey < key:
-                return FindNodeByKeyHelper(currentNode.RightChild, key)
-
-            return FindNodeByKeyHelper(currentNode.LeftChild, key)
-
-        FindNodeByKeyHelper(self.Root, key)
-
+        self.result.Node = parent
         return self.result
 
     def AddKeyValue(self, key, val):
@@ -49,25 +47,28 @@ class BST:
             return False
 
         new_node = BSTNode(key, val, result.Node)
-        if not self.Root:
-            self.Root = new_node
 
-        elif result.Node:
-                if result.Node.NodeKey > key:
-                    result.Node.LeftChild = new_node
-                else:
-                    result.Node.RightChild = new_node
+        if self.Root is None:
+            self.Root = new_node
+            return True
+
+        if result.Node:
+            if key < result.Node.NodeKey:
+                result.Node.LeftChild = new_node
+            else:
+                result.Node.RightChild = new_node
+            new_node.Parent = result.Node
+
         return True
 
     def FinMinMax(self, FromNode, FindMax):
-        if not FromNode:
+        if FromNode:
+            currentNode = FromNode
+            while currentNode.RightChild if FindMax else currentNode.LeftChild:
+                currentNode = currentNode.RightChild if FindMax else currentNode.LeftChild
+            return currentNode
+        else:
             return None
-
-        currentNode = FromNode
-        while currentNode.RightChild if FindMax else currentNode.LeftChild:
-            currentNode = currentNode.RightChild if FindMax else currentNode.LeftChild
-
-        return currentNode
 
     def DeleteNodeByKey(self, key):
         result = self.FindNodeByKey(key)
@@ -77,7 +78,6 @@ class BST:
         node_to_delete = result.Node
         parent = node_to_delete.Parent
 
-        # 1. Узел — лист (не имеет детей)
         if not node_to_delete.LeftChild and not node_to_delete.RightChild:
             if parent:
                 if parent.LeftChild == node_to_delete:
@@ -85,8 +85,7 @@ class BST:
                 else:
                     parent.RightChild = None
             else:
-                self.Root = None  # Если удаляем корень и он единственный
-
+                self.Root = None
         # 2. Узел имеет только одного ребёнка
         elif not node_to_delete.LeftChild or not node_to_delete.RightChild:
             child = (
@@ -127,11 +126,16 @@ class BST:
             return 0
 
         def CountHelper(currentNode):
-            if not currentNode:
+            if currentNode is None:
                 return 0
-            count = 1
-            count += CountHelper(currentNode.LeftChild)
-            count += CountHelper(currentNode.RightChild)
-            return count
+            return 1 + CountHelper(currentNode.LeftChild) + CountHelper(currentNode.RightChild)
 
         return CountHelper(self.Root)
+
+
+
+
+
+
+
+

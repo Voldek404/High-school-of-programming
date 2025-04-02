@@ -23,8 +23,8 @@ class BSTMethods(unittest.TestCase):
         self.assertFalse(result.NodeHasKey)
 
     def testAddKeyValue(self):
-        self.assertFalse(self.tree.AddKeyValue(6, "New Node"))
-        self.assertTrue(self.tree.AddKeyValue(7, "Duplicate"))
+        self.assertTrue(self.tree.AddKeyValue(6, "New Node"))
+        self.assertFalse(self.tree.AddKeyValue(7, "Duplicate"))
 
     def testFinMinMax(self):
         min_node = self.tree.FinMinMax(self.tree.Root, False)
