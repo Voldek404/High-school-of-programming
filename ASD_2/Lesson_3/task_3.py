@@ -65,7 +65,9 @@ class BST:
         if FromNode:
             currentNode = FromNode
             while currentNode.RightChild if FindMax else currentNode.LeftChild:
-                currentNode = currentNode.RightChild if FindMax else currentNode.LeftChild
+                currentNode = (
+                    currentNode.RightChild if FindMax else currentNode.LeftChild
+                )
             return currentNode
         else:
             return None
@@ -90,7 +92,11 @@ class BST:
 
         # 2. Узел имеет только одного ребёнка
         elif not node_to_delete.LeftChild or not node_to_delete.RightChild:
-            child = node_to_delete.LeftChild if node_to_delete.LeftChild else node_to_delete.RightChild
+            child = (
+                node_to_delete.LeftChild
+                if node_to_delete.LeftChild
+                else node_to_delete.RightChild
+            )
 
             if parent:
                 if parent.LeftChild == node_to_delete:
@@ -103,7 +109,9 @@ class BST:
 
         # 3. Узел имеет двух детей
         else:
-            successor = self.FinMinMax(node_to_delete.RightChild, False)  # Минимальный узел в правом поддереве
+            successor = self.FinMinMax(
+                node_to_delete.RightChild, False
+            )  # Минимальный узел в правом поддереве
 
             node_to_delete.NodeKey = successor.NodeKey
             node_to_delete.NodeValue = successor.NodeValue
@@ -126,14 +134,103 @@ class BST:
         def CountHelper(currentNode):
             if currentNode is None:
                 return 0
-            return 1 + CountHelper(currentNode.LeftChild) + CountHelper(currentNode.RightChild)
+            return (
+                1
+                + CountHelper(currentNode.LeftChild)
+                + CountHelper(currentNode.RightChild)
+            )
 
         return CountHelper(self.Root)
 
+    def DeepAllNodesIn(self):
+        if self.Root is None:
+            return
+        list_of_nodes = []
 
+        def DeepAllNodesInHelper(currentNode):
+            if currentNode is None:
+                return
 
+            DeepAllNodesInHelper(currentNode.LeftChild)
+            list_of_nodes.append(currentNode.NodeKey)
+            DeepAllNodesInHelper(currentNode.RightChild)
 
+        DeepAllNodesInHelper(self.Root)
+        return tuple(list_of_nodes)
 
+    def DeepAllNodesPre(self):
+        if self.Root is None:
+            return
+        list_of_nodes = []
 
+        def DeepAllNodesPreHelper(currentNode):
+            if currentNode is None:
+                return
 
+            list_of_nodes.append(currentNode.NodeKey)
+            DeepAllNodesPreHelper(currentNode.LeftChild)
+            DeepAllNodesPreHelper(currentNode.RightChild)
 
+        DeepAllNodesPreHelper(self.Root)
+        return tuple(list_of_nodes)
+
+    def DeepAllNodesPost(self):
+        if self.Root is None:
+            return None
+        list_of_nodes = []
+
+        def DeepAllNodesPostHelper(currentNode):
+            if currentNode is None:
+                return
+
+            DeepAllNodesPostHelper(currentNode.LeftChild)
+            DeepAllNodesPostHelper(currentNode.RightChild)
+            list_of_nodes.append(currentNode.NodeKey)
+
+        DeepAllNodesPostHelper(self.Root)
+        return tuple(list_of_nodes)
+
+    def DeepAllNodes(self, search_type):
+        if self.Root is None:
+            return None
+        if search_type == 0:
+            return self.DeepAllNodesIn()
+
+        if search_type == 1:
+            return self.DeepAllNodesPre()
+
+        if search_type == 2:
+            return self.DeepAllNodesPost()
+
+    def BSTHeight(self):
+        if self.Root is None:
+            return 0
+
+        def BSTHeightHelper(currentNode):
+            if currentNode is None:
+                return 0
+
+            left_height = BSTHeightHelper(currentNode.LeftChild)
+            right_height = BSTHeightHelper(currentNode.RightChild)
+            return max(left_height, right_height) + 1
+
+        return BSTHeightHelper(self.Root)
+
+    def WideDeepAllNodes(self) -> tuple:
+        if self.Root is None:
+            return None
+
+        levels = self.BSTHeight()
+        nodes_to_levels = [[] for _ in range(levels)]
+
+        def WideDeepAllNodesHelper(currentNode, currentLevel):
+            if currentNode is None:
+                return
+
+            nodes_to_levels[currentLevel].append(currentNode.NodeKey)
+
+            WideDeepAllNodesHelper(currentNode.LeftChild, currentLevel + 1)
+            WideDeepAllNodesHelper(currentNode.RightChild, currentLevel + 1)
+
+        WideDeepAllNodesHelper(self.Root, 0)
+        return tuple(nodes_to_levels)
