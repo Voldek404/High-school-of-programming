@@ -24,6 +24,10 @@ class BSTSearchMethods(unittest.TestCase):
         result = self.tree.DeepAllNodes(2)
         self.assertEqual(result, (2, 7, 5, 12, 17, 15, 10))
 
+    def testsBFS(self):
+        result = self.tree.WideAllNodes()
+        self.assertEqual(result, ([2], [5,15], [2,7,12,17]))
+
 
 if __name__ == "__main__":
     unittest.main()
