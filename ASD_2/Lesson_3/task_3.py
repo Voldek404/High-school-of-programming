@@ -152,7 +152,7 @@ class BST:
                 return
 
             DeepAllNodesInHelper(currentNode.LeftChild)
-            list_of_nodes.append(currentNode.NodeKey)
+            list_of_nodes.append(currentNode)
             DeepAllNodesInHelper(currentNode.RightChild)
 
         DeepAllNodesInHelper(self.Root)
@@ -167,7 +167,7 @@ class BST:
             if currentNode is None:
                 return
 
-            list_of_nodes.append(currentNode.NodeKey)
+            list_of_nodes.append(currentNode)
             DeepAllNodesPreHelper(currentNode.LeftChild)
             DeepAllNodesPreHelper(currentNode.RightChild)
 
@@ -185,7 +185,7 @@ class BST:
 
             DeepAllNodesPostHelper(currentNode.LeftChild)
             DeepAllNodesPostHelper(currentNode.RightChild)
-            list_of_nodes.append(currentNode.NodeKey)
+            list_of_nodes.append(currentNode)
 
         DeepAllNodesPostHelper(self.Root)
         return tuple(list_of_nodes)
@@ -227,7 +227,7 @@ class BST:
             if currentNode is None:
                 return
 
-            nodes_to_levels[currentLevel].append(currentNode.NodeKey)
+            nodes_to_levels[currentLevel].append(currentNode)
 
             WideAllNodesHelper(currentNode.LeftChild, currentLevel + 1)
             WideAllNodesHelper(currentNode.RightChild, currentLevel + 1)
