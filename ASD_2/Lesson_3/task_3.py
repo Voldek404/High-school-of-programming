@@ -196,10 +196,10 @@ class BST:
         if search_type == 0:
             return self.DeepAllNodesIn()
 
-        if search_type == 1:
+        if search_type == 2:
             return self.DeepAllNodesPre()
 
-        if search_type == 2:
+        if search_type == 1:
             return self.DeepAllNodesPost()
 
     def BSTHeight(self):
