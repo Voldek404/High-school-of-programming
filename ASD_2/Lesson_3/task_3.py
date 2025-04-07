@@ -216,21 +216,21 @@ class BST:
 
         return BSTHeightHelper(self.Root)
 
-    def WideDeepAllNodes(self) -> tuple:
+    def WideAllNodes(self) -> tuple:
         if self.Root is None:
             return None
 
         levels = self.BSTHeight()
         nodes_to_levels = [[] for _ in range(levels)]
 
-        def WideDeepAllNodesHelper(currentNode, currentLevel):
+        def WideAllNodesHelper(currentNode, currentLevel):
             if currentNode is None:
                 return
 
             nodes_to_levels[currentLevel].append(currentNode.NodeKey)
 
-            WideDeepAllNodesHelper(currentNode.LeftChild, currentLevel + 1)
-            WideDeepAllNodesHelper(currentNode.RightChild, currentLevel + 1)
+            WideAllNodesHelper(currentNode.LeftChild, currentLevel + 1)
+            WideAllNodesHelper(currentNode.RightChild, currentLevel + 1)
 
-        WideDeepAllNodesHelper(self.Root, 0)
+        WideAllNodesHelper(self.Root, 0)
         return tuple(nodes_to_levels)
