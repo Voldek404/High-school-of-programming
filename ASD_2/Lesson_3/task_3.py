@@ -233,4 +233,8 @@ class BST:
             WideAllNodesHelper(currentNode.RightChild, currentLevel + 1)
 
         WideAllNodesHelper(self.Root, 0)
-        return tuple(nodes_to_levels)
+        result_list = []
+        for sub_list in nodes_to_levels:
+            for el in sub_list:
+                result_list.append(el)
+        return tuple(result_list)
