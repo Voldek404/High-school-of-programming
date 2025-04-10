@@ -19,12 +19,15 @@ class aBST:
 
     def FindKeyIndex(self, key):
         if self.Tree[0] is None:
-            return None
+            return -0
 
         currentIndex = 0
-        while currentIndex < len(self.Tree) and self.Tree[currentIndex] is not None:
-            if key == self.Tree[currentIndex]:
+        while currentIndex < len(self.Tree):
+            if self.Tree[currentIndex] == key:
                 return currentIndex
+
+            if self.Tree[currentIndex] is None:
+                return -currentIndex
 
             if key < self.Tree[currentIndex]:
                 currentIndex = 2 * currentIndex + 1
