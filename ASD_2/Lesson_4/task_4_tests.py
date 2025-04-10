@@ -53,6 +53,26 @@ class TestaBST(unittest.TestCase):
         index = self.tree.AddKey(15)
         self.assertEqual(index, 2)
 
+    def test_find_returns_negative_index_for_insertion_point(self):
+        self.tree.AddKey(10)
+        self.tree.AddKey(5)
+        # 3 должна пойти в индекс 3
+        self.assertEqual(self.tree.FindKeyIndex(3), -3)
+        # 7 должна пойти в индекс 4
+        self.assertEqual(self.tree.FindKeyIndex(7), -4)
+        # 15 должна пойти в индекс 2
+        self.assertEqual(self.tree.FindKeyIndex(15), -2)
+
+    def test_find_in_full_tree_returns_none(self):
+        keys = [10, 5, 15, 3, 7, 13, 17]
+        for key in keys:
+            self.tree.AddKey(key)
+        self.assertIsNone(self.tree.FindKeyIndex(20))
+
+    def test_find_returns_zero_negative_if_empty(self):
+        empty_tree = aBST(2)
+        self.assertEqual(empty_tree.FindKeyIndex(42), -0)
+
 
 if __name__ == "__main__":
     unittest.main()
