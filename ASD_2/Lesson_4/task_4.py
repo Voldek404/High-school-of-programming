@@ -23,10 +23,10 @@ class aBST:
 
         currentIndex = 0
         while currentIndex < len(self.Tree) and self.Tree[currentIndex] is not None:
-            if key == self.Tree[currentIndex].NodeKey:
+            if key == self.Tree[currentIndex]:
                 return currentIndex
 
-            if key < self.Tree[currentIndex].NodeKey:
+            if key < self.Tree[currentIndex]:
                 currentIndex = 2 * currentIndex + 1
             else:
                 currentIndex = 2 * currentIndex + 2
@@ -34,4 +34,23 @@ class aBST:
         return None
 
     def AddKey(self, key):
-        return -1
+        searching_result = self.FindKeyIndex(key)
+        if self.Tree[0] is None:
+            self.Tree[0] = key
+            return 0
+
+        if searching_result is not None:
+            return -1
+
+        currentIndex = 0
+        while currentIndex < len(self.Tree):
+            if self.Tree[currentIndex] is None:
+                self.Tree[currentIndex] = key
+                break
+
+            if key < self.Tree[currentIndex]:
+                currentIndex = 2 * currentIndex + 1
+            else:
+                currentIndex = 2 * currentIndex + 2
+
+        return self.Tree.index(key)
