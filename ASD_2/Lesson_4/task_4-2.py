@@ -59,7 +59,11 @@ class aBST:
         return self.Tree.index(key)
 # Задача 4.2* Найти наименьшего общего предка. В данном случае поиск производится с помощью правил нахождения индексов родителя.
 # Исходя из итеративного подхода с использованием индексов space complexity будет ниже, чем при использовании рекурсии, требующей больше затрат при обходе
-    def LCAFind(self, node_1_index, node_2_index):
+# Временная и пространственная сложности O(log n)
+    def LCAFind(self, node_1_index:int, node_2_index:int):
+        if self.Tree[0] is None:
+            return None
+
         if node_1_index == node_2_index:
             return (node_1_index - 1) // 2
 
@@ -77,4 +81,17 @@ class aBST:
             currentIndex = (currentIndex - 1) // 2
 
         return None
+
+    # Задача 4.3 Преобразовать метод обхода в ширину с учетом прямого доступа к индексам
+    # В связи с тем, что список с индексами уже представляет собой описания дерева по уровням, задача сводится к
+    # перебору списка с исключением None, поскольку в обычном обходе None отсутствует. Time complexity O(V), space O(1)
+    def WideAllNodesFlat(self):
+        if self.Tree[0] is None:
+            return None
+        for index in range(len(self.Tree)):
+            if self.Tree[index] is not None:
+                value = self.Tree[index]
+                print(f'{index}:{value}')
+
+
 
