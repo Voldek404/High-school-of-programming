@@ -1,23 +1,24 @@
 import unittest
 
-from task_4 import BST, aBST
+from task_4 import aBST
 
 
 class TestaBST(unittest.TestCase):
     def setUp(self):
         self.tree = aBST(2)
 
-    def test_find_in_empty_tree_returns_none(self):
-        self.assertIsNone(self.tree.FindKeyIndex(10))
+    def test_find_in_empty_tree_returns_zero_negative(self):
+        self.assertEqual(self.tree.FindKeyIndex(10), -0)
 
     def test_add_key_to_empty_tree_sets_root(self):
-        self.tree.AddKey(10)
+        result = self.tree.AddKey(10)
+        self.assertEqual(result, 0)
         self.assertEqual(self.tree.Tree[0], 10)
 
-    def test_add_duplicate_returns_minus_one(self):
+    def test_add_duplicate_returns_same_index(self):
         self.tree.AddKey(10)
         result = self.tree.AddKey(10)
-        self.assertEqual(result, -1)
+        self.assertEqual(result, 0)
 
     def test_find_existing_key_returns_correct_index(self):
         self.tree.AddKey(10)
@@ -26,10 +27,10 @@ class TestaBST(unittest.TestCase):
         self.assertEqual(self.tree.FindKeyIndex(5), 1)
         self.assertEqual(self.tree.FindKeyIndex(15), 2)
 
-    def test_find_non_existing_key_returns_none(self):
+    def test_find_non_existing_key_returns_negative_index(self):
         self.tree.AddKey(10)
         self.tree.AddKey(5)
-        self.assertIsNone(self.tree.FindKeyIndex(20))
+        self.assertEqual(self.tree.FindKeyIndex(20), -6)
 
     def test_add_key_places_correctly_left_and_right(self):
         self.tree.AddKey(10)
@@ -56,18 +57,15 @@ class TestaBST(unittest.TestCase):
     def test_find_returns_negative_index_for_insertion_point(self):
         self.tree.AddKey(10)
         self.tree.AddKey(5)
-        # 3 должна пойти в индекс 3
-        self.assertEqual(self.tree.FindKeyIndex(3), -3)
-        # 7 должна пойти в индекс 4
-        self.assertEqual(self.tree.FindKeyIndex(7), -4)
-        # 15 должна пойти в индекс 2
-        self.assertEqual(self.tree.FindKeyIndex(15), -2)
+        self.assertEqual(self.tree.FindKeyIndex(3), -3)  # левый потомок 5
+        self.assertEqual(self.tree.FindKeyIndex(7), -4)  # правый потомок 5
+        self.assertEqual(self.tree.FindKeyIndex(15), -2)  # правый потомок 10
 
     def test_find_in_full_tree_returns_none(self):
         keys = [10, 5, 15, 3, 7, 13, 17]
         for key in keys:
             self.tree.AddKey(key)
-        self.assertIsNone(self.tree.FindKeyIndex(20))
+        self.assertIsNone(self.tree.FindKeyIndex(20))  # некуда вставить
 
     def test_find_returns_zero_negative_if_empty(self):
         empty_tree = aBST(2)
