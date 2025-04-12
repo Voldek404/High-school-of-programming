@@ -18,6 +18,9 @@ class aBST:
         self.Tree = [None] * tree_size
 
     def FindKeyIndex(self, key):
+        if self.Tree[0] is None:
+            return -1
+
         currentIndex = 0
         while currentIndex < len(self.Tree):
             if self.Tree[currentIndex] is None:
@@ -35,9 +38,12 @@ class aBST:
 
     def AddKey(self, key):
         searching_result = self.FindKeyIndex(key)
-        if searching_result is None or searching_result >= 0:
+        if searching_result is None:
             return -1
-        current_index = -searching_result
-        self.Tree[current_index] = key
+        if searching_result >= 0:
+            return searching_result
 
-        return current_index
+        currentIndex = -searching_result if searching_result != -1 else 0
+        self.Tree[currentIndex] = key
+
+        return currentIndex
