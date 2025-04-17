@@ -1,7 +1,7 @@
 def GenerateBBSTArray(a):
     a.sort()
     if not a:
-        return []
+        return None
 
     result = []
     queue = []
@@ -21,9 +21,6 @@ def GenerateBBSTArray(a):
     return result
 
 
-a = [1, 2, 3, 4, 5, 6, 7, 8]
-resulting = GenerateBBSTArray(a)
-print(resulting)
 
 
 
