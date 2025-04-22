@@ -7,7 +7,7 @@ class BSTNode:
         self.level = 0
 
 
-class BalancesBST:
+class BalancedBST:
     def __init__(self):
         self.Root = None
 
