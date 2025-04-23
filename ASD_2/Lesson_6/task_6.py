@@ -4,7 +4,7 @@ class BSTNode:
         self.Parent = parent
         self.LeftChild = None
         self.RightChild = None
-        self.level = 0
+        self.Level = 0
 
 
 class BalancedBST:
@@ -13,17 +13,17 @@ class BalancedBST:
 
     def GenerateTree(self, a):
         if not a:
-            return None
+            return
 
         a.sort()
 
         def GenerateTreeHelper(a, left, right, parent, level):
             if left > right:
-                return
+                return None
 
             mid = (left + right) // 2
             currentNode = BSTNode(a[mid], parent)
-            currentNode.level = level
+            currentNode.Level = level
             currentNode.LeftChild = GenerateTreeHelper(
                 a, left, mid - 1, currentNode, level + 1
             )
@@ -33,7 +33,6 @@ class BalancedBST:
             return currentNode
 
         self.Root = GenerateTreeHelper(a, 0, len(a) - 1, None, 0)
-        return self.Root
 
     def IsBalanced(self, root_node):
         root_node = self.Root
