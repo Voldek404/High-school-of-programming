@@ -1,22 +1,25 @@
 class Heap:
     def __init__(self):
         self.HeapArray = []
-
-    def Add(self, key):
-        if len(self.HeapArray) == self.heap_size:
-            return False
-
-        if self.HeapArray[0] is None:
-            self.HeapArray[0] = key
-        self.HeapArray.append(key)
-        self.SiftUp(len(self.HeapArray) - 1)
+        self.heap_size = 0
 
     def MakeHeap(self, a, depth):
         self.depth = depth
         self.heap_size = 2 ** (self.depth + 1) - 1
-        for key in a:
-            self.Add(key)
+        self.HeapArray = a[:]
+        for i in range(len(self.HeapArray) // 2 - 1, -1, -1):
+            self.SiftDown(i)
         pass
+
+    def Add(self, key):
+        if len(self.HeapArray) >= self.heap_size:
+            return -1
+
+        if len(self.HeapArray) == 0:
+            self.HeapArray.append(key)
+        else:
+            self.HeapArray.append(key)
+            self.SiftUp(len(self.HeapArray) - 1)
 
     def SiftUp(self, index):
         while index > 0:
@@ -61,5 +64,6 @@ class Heap:
         result = self.HeapArray[0]
         far_right_el = self.HeapArray[len(self.HeapArray) - 1]
         self.HeapArray[0] = far_right_el
+        self.HeapArray.pop()
         self.SiftDown(0)
         return result
