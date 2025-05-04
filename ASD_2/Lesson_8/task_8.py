@@ -32,15 +32,15 @@ class SimpleGraph:
 
         return True
 
-    def FindVertexIndex(self, v):
-        for i in range(self.max_vertex):
-            if self.vertex[i] is not None and self.vertex[i].Value == v:
-                return i
-        return None
-
     def IsEdge(self, v1, v2):
-        first_index = self.FindVertexIndex(v1)
-        second_index = self.FindVertexIndex(v2)
+        first_index = None
+        second_index = None
+        for i in range(self.max_vertex):
+            if self.vertex[i] is not None and self.vertex[i].Value == v1:
+                first_index = i
+        for j in range(self.max_vertex):
+            if self.vertex[j] is not None and self.vertex[j].Value == v2:
+                second_index = j
 
         if first_index is None or second_index is None:
             return False
@@ -51,22 +51,31 @@ class SimpleGraph:
         )
 
     def AddEdge(self, v1, v2):
-        first_index = self.FindVertexIndex(v1)
-        second_index = self.FindVertexIndex(v2)
+        first_index = None
+        second_index = None
+        for i in range(self.max_vertex):
+            if self.vertex[i] is not None and self.vertex[i].Value == v1:
+                first_index = i
+        for j in range(self.max_vertex):
+            if self.vertex[j] is not None and self.vertex[j].Value == v2:
+                second_index = j
 
         if first_index is None or second_index is None:
             return False
 
-        if self.m_adjacency[first_index][second_index] == 0:
-            self.m_adjacency[first_index][second_index] = 1
-            self.m_adjacency[second_index][first_index] = 1
-            return True
-
-        return False
+        self.m_adjacency[first_index][second_index] = 1
+        self.m_adjacency[second_index][first_index] = 1
+        return True
 
     def RemoveEdge(self, v1, v2):
-        first_index = self.FindVertexIndex(v1)
-        second_index = self.FindVertexIndex(v2)
+        first_index = None
+        second_index = None
+        for i in range(self.max_vertex):
+            if self.vertex[i] is not None and self.vertex[i].Value == v1:
+                first_index = i
+        for j in range(self.max_vertex):
+            if self.vertex[j] is not None and self.vertex[j].Value == v2:
+                second_index = j
 
         if first_index is None or second_index is None:
             return False
