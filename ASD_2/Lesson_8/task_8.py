@@ -38,9 +38,11 @@ class SimpleGraph:
         for i in range(self.max_vertex):
             if self.vertex[i] is not None and self.vertex[i].Value == v1:
                 first_index = i
+                break
         for j in range(self.max_vertex):
             if self.vertex[j] is not None and self.vertex[j].Value == v2:
                 second_index = j
+                break
 
         if first_index is None or second_index is None:
             return False
@@ -56,9 +58,11 @@ class SimpleGraph:
         for i in range(self.max_vertex):
             if self.vertex[i] is not None and self.vertex[i].Value == v1:
                 first_index = i
+                break
         for j in range(self.max_vertex):
             if self.vertex[j] is not None and self.vertex[j].Value == v2:
                 second_index = j
+                break
 
         if first_index is None or second_index is None:
             return False
@@ -73,9 +77,11 @@ class SimpleGraph:
         for i in range(self.max_vertex):
             if self.vertex[i] is not None and self.vertex[i].Value == v1:
                 first_index = i
+                break
         for j in range(self.max_vertex):
             if self.vertex[j] is not None and self.vertex[j].Value == v2:
                 second_index = j
+                break
 
         if first_index is None or second_index is None:
             return False
