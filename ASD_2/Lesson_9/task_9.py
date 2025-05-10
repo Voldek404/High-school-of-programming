@@ -10,7 +10,7 @@ class SimpleTree:
         self.Root = root
 
     def EvenTrees(self):
-        if self.Root is None:
+        if self.Root is None or len(self.Root.Children) == 0:
             return None
 
         result_list = []
@@ -21,8 +21,8 @@ class SimpleTree:
                 subtree_size += EvenTreesHelper(Node)
 
             if (subtree_size - 1) % 2 == 0 and currentNode.Parent is not None:
-                result_list.append(currentNode)
-                result_list.append(Node)
+                result_list.append(currentNode.NodeValue)
+                result_list.append(Node.NodeValue)
 
             return subtree_size
 
