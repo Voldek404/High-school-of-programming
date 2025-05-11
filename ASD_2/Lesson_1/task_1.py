@@ -1,105 +1,114 @@
-class BSTNode:
-    def __init__(self, key, val, parent):
-        self.Nodekey = key
+class SimpleTreeNode:
+    def __init__(self, val, parent):
+
         self.NodeValue = val
         self.Parent = parent
-        self.LeftChild = None
-        self.RightChild = None
+        self.Children = []
 
 
-class BSTFind:
-    def __init__(self):
-        self.Node = None
+class SimpleTree:
+    def __init__(self, root):
+        self.Root = root
 
-        self.NodeHasKey = False
-        self.ToLeft = False
-
-
-class BST:
-    def __init__(self, node):
-        self.Root = node
-
-    def FindNodeByKey(self, key):
-        self.result = BSTFind()
+    def AddChild(self, ParentNode, NewChild):
         if self.Root is None:
-            return None
+            self.Root = NewChild
+            return
 
-        def FindNodeByKeyHelper(currentNode, key):
-            if currentNode is None:
-                return self.result
+        def AddChildHelper(currentNode):
+            if currentNode == ParentNode:
+                currentNode.Children.append(NewChild)
+                NewChild.Parent = currentNode
+                return
+            for child in currentNode.Children:
+                AddChildHelper(child)
 
-            if currentNode.key == key:
-                self.result.Node = currentNode
-                self.result.NodeHasKey = True
-                self.result.ToLeft = False
-
-            if currentNode.key < key:
-                return FindNodeByKeyHelper(currentNode.RightChild, key)
-
-            return FindNodeByKeyHelper(currentNode.LeftChild, key)
-
-        FindNodeByKeyHelper(self.Root, key)
-
-        return self.result
-
-    def AddKeyValue(self, key, val):
-        self.FindNodeByKey(key)
-        if self.result.node and self.result.nodehaskey:
-            return False
-
-        new_node = BSTNode(self, key, val, self.result.Node)
-        if not self.Root:
-            self.Root = new_node
-        elif self.result.Node.key < key:
-            self.result.Node.LeftChild = new_node
-        else:
-            self.result.Node.RightChild = new_node
-
-        return True
-
-    def FinMinMax(self, FromNode, FindMax):
-        if not self.Root:
-            return None
-
-        self.Min = BSTNode()
-        self.Max = BSTNode()
-
-        def FinMinMaxHelper(currentNodeMin, currentNodeMax):
-            if currentNodeMin.LeftChild:
-                currentNodeMin = currentNodeMin.LeftChild
-            else:
-                self.Min = currentNodeMin
-
-            if currentNodeMax.RightChild:
-                currentNodeMax = currentNodeMax.RightChild
-            else:
-                self.Max = currentNodeMax
-            FinMinMaxHelper(self.FromNode, self.FromNode)
-
-        return self.Max, self.Max
-
-    def DeleteNodeByKey(self, key):
-        self.FindNodeByKey(key)
-        if not self.result.node and not self.result.nodehaskey:
-            return False
-        if self.result.node.LeftChild is None and self.result.node.RightChild is None:
-            self.result.node = None
+        return AddChildHelper(self.Root)
 
 
-        return DeleteNodeByKeyHelper(self.Root)
+    def DeleteNode(self, NodeToDelete):
+        if self.Root is None:
+            return
+        if NodeToDelete == self.Root:
+            self.Root = None
+            return
 
+        def DeleteNodeHelper(currentNode):
+            for child in currentNode.Children:
+                if child == NodeToDelete:
+                    currentNode.Children.remove(child)
+                else:
+                    DeleteNodeHelper(child)
+
+        return DeleteNodeHelper(self.Root)
+
+
+    def GetAllNodes(self):
+        if self.Root is None:
+            return []
+
+        def GetAllNodesHelper(currentNode, nodesList):
+            nodesList.append(currentNode)
+            if currentNode.Children:
+                for child in currentNode.Children:
+                    GetAllNodesHelper(child, nodesList)
+            return nodesList
+
+        return GetAllNodesHelper(self.Root, [])
+
+    def FindNodesByValue(self, val):
+        if self.Root is None:
+            return []
+
+        def FindNodesHelper(currentNode, nodesList):
+            if currentNode.NodeValue == val:
+                nodesList.append(currentNode)
+            for child in currentNode.Children:
+                FindNodesHelper(child, nodesList)
+            return nodesList
+
+        return FindNodesHelper(self.Root, [])
+
+
+    def MoveNode(self, OriginalNode, NewParent):
+        if self.Root is None:
+            return
+
+        def MoveNodeHelper(currentNode):
+            for child in currentNode.Children:
+                if child == OriginalNode:
+                    NewParent.Children.append(OriginalNode)
+                    OriginalNode.Parent = NewParent
+                    currentNode.Children.remove(child)
+                    break
+                else:
+                    MoveNodeHelper(child)
+
+        return MoveNodeHelper(self.Root)
 
     def Count(self):
-        if not self.Root:
+        if self.Root is None:
             return 0
 
         def CountHelper(currentNode):
-            if not currentNode:
-                return 0
             count = 1
-            count += CountHelper(currentNode.LeftChild)
-            count += CountHelper(currentNode.RightChild)
+            if currentNode.Children:
+                for node in currentNode.Children:
+                    count += CountHelper(node)
             return count
 
         return CountHelper(self.Root)
 
+    def LeafCount(self):
+        if self.Root is None:
+            return 0
+
+        def LeafCountHelper(currentNode):
+            count = 0
+            if not currentNode.Children:
+                return 1
+            for child in currentNode.Children:
+                count += LeafCountHelper(child)
+            return count
+
+        return LeafCountHelper(self.Root)
