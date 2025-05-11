@@ -8,12 +8,6 @@ class SimpleTreeNode:
 class SimpleTree:
     def __init__(self, root, level):
         self.Root = root
-        self.Level = level
-
-    def updateSubtreeLevel(node, level):
-        node.level = level
-        for child in node.Children:
-            updateSubtreeLevel(child, level + 1)
 
     def AddChild(self, ParentNode, NewChild):
         if self.Root is None:
