@@ -6,7 +6,7 @@ class SimpleTreeNode:
 
 
 class SimpleTree:
-    def __init__(self, root, level):
+    def __init__(self, root):
         self.Root = root
 
     def AddChild(self, ParentNode, NewChild):
