@@ -1,5 +1,6 @@
 class SimpleTreeNode:
     def __init__(self, val, parent):
+
         self.NodeValue = val
         self.Parent = parent
         self.Children = []
@@ -24,6 +25,7 @@ class SimpleTree:
 
         return AddChildHelper(self.Root)
 
+
     def DeleteNode(self, NodeToDelete):
         if self.Root is None:
             return
@@ -40,11 +42,12 @@ class SimpleTree:
 
         return DeleteNodeHelper(self.Root)
 
-    def GetAllNodes(self) -> List[SimpleTreeNode]:
+
+    def GetAllNodes(self):
         if self.Root is None:
             return []
 
-        def GetAllNodesHelper(currentNode, nodesList: list) -> list:
+        def GetAllNodesHelper(currentNode, nodesList):
             nodesList.append(currentNode)
             if currentNode.Children:
                 for child in currentNode.Children:
@@ -53,11 +56,11 @@ class SimpleTree:
 
         return GetAllNodesHelper(self.Root, [])
 
-    def FindNodesByValue(self, val) -> list:
+    def FindNodesByValue(self, val):
         if self.Root is None:
             return []
 
-        def FindNodesHelper(currentNode, nodesList: list) -> list:
+        def FindNodesHelper(currentNode, nodesList):
             if currentNode.NodeValue == val:
                 nodesList.append(currentNode)
             for child in currentNode.Children:
@@ -65,6 +68,7 @@ class SimpleTree:
             return nodesList
 
         return FindNodesHelper(self.Root, [])
+
 
     def MoveNode(self, OriginalNode, NewParent):
         if self.Root is None:
@@ -74,8 +78,6 @@ class SimpleTree:
             for child in currentNode.Children:
                 if child == OriginalNode:
                     NewParent.Children.append(OriginalNode)
-                    OriginalNode.level = currentNode.Level + 1
-                    updateSubtreeLevel(OriginalNode, OriginalNode.level)
                     OriginalNode.Parent = NewParent
                     currentNode.Children.remove(child)
                     break
@@ -84,11 +86,11 @@ class SimpleTree:
 
         return MoveNodeHelper(self.Root)
 
-    def Count(self) -> int:
+    def Count(self):
         if self.Root is None:
             return 0
 
-        def CountHelper(currentNode)-> int:
+        def CountHelper(currentNode):
             count = 1
             if currentNode.Children:
                 for node in currentNode.Children:
@@ -97,7 +99,7 @@ class SimpleTree:
 
         return CountHelper(self.Root)
 
-    def LeafCount(self) -> int:
+    def LeafCount(self):
         if self.Root is None:
             return 0
 
