@@ -47,10 +47,10 @@ class SimpleGraph:
                 return True
         return False
 
-    def DeepFirstSearch(self, VFrom, VTo):
+    def DepthFirstSearch(self, VFrom, VTo):
         curr_stack = []
 
-        def DeepFirstSearchHelper(current_A_vertex):
+        def DepthFirstSearchHelper(current_A_vertex):
             self.vertex[current_A_vertex].Hit = True
             curr_stack.append(current_A_vertex)
             if self.IsEdge(current_A_vertex, VTo):
@@ -63,13 +63,13 @@ class SimpleGraph:
                         not self.vertex[i].Hit
                         and self.m_adjacency[current_A_vertex][i] == 1
                     ):
-                        result = DeepFirstSearchHelper(i)
+                        result = DepthFirstSearchHelper(i)
                         if result:
                             return result
 
                 curr_stack.pop()
 
-        result = DeepFirstSearchHelper(VFrom)
+        result = DepthFirstSearchHelper(VFrom)
         if result:
             return result
 
