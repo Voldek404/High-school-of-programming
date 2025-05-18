@@ -52,9 +52,9 @@ class SimpleGraph:
 
         def DepthFirstSearchHelper(current_A_vertex):
             self.vertex[current_A_vertex].Hit = True
-            curr_stack.append(current_A_vertex)
+            curr_stack.append(self.vertex[current_A_vertex])
             if self.IsEdge(current_A_vertex, VTo):
-                curr_stack.append(VTo)
+                curr_stack.append(self.vertex[VTo])
                 return curr_stack
 
             else:
@@ -70,8 +70,8 @@ class SimpleGraph:
                 curr_stack.pop()
 
         result = DepthFirstSearchHelper(VFrom)
-        if result:
-            return result
+        for v in self.vertex:
+            if v:
+                v.Hit = False
 
-        else:
-            return []
+        return result if result else []
