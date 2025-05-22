@@ -77,8 +77,16 @@ class SimpleGraph:
         return result if result else []
 
     def BreadthFirstSearch(self, VFrom, VTo):
+        if (
+            not (0 <= VFrom < self.max_vertex)
+            or not (0 <= VTo < self.max_vertex)
+            or self.vertex[VFrom] is None
+            or self.vertex[VTo] is None):
+            return []
+
         if VFrom == VTo:
-            return [self.vertex[VFrom]] if self.vertex[VFrom] else []
+            return [self.vertex[VFrom]]
+
         queue = []
         parents = [None] * self.max_vertex
 
