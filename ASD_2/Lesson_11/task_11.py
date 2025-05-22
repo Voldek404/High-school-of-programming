@@ -76,34 +76,32 @@ class SimpleGraph:
 
         return result if result else []
 
-    def BreadthFirstSearch(self, VFrom, VTo):
-        if VFrom == VTo:
-            return [self.vertex[VFrom]] if self.vertex[VFrom] else []
+def BreadthFirstSearch(self, VFrom, VTo):
+    if VFrom == VTo:
+        return [self.vertex[VFrom]] if self.vertex[VFrom] else []
+    queue = []
+    parents = [None] * self.max_vertex
 
-        queue = []
-        parents = [None] * self.max_vertex
+    for v in self.vertex:
+        if v:
+            v.Hit = False
+    self.vertex[VFrom].Hit = True
+    queue.append(VFrom)
 
-        for v in self.vertex:
-            if v:
-                v.Hit = False
+    while queue:
+        current = queue.pop(0)
 
-        self.vertex[VFrom].Hit = True
-        queue.append(VFrom)
-
-        while queue:
-            current = queue.pop(0)
-
-            for i in range(self.max_vertex):
-                if self.m_adjacency[current][i] == 1 and not self.vertex[i].Hit:
-                    self.vertex[i].Hit = True
-                    parents[i] = current
-                    if i == VTo:
-                        path = [self.vertex[VTo]]
-                        while current != VFrom:
-                            current = parents[current]
-                            path.append(self.vertex[current])
+        for i in range(self.max_vertex):
+            if self.m_adjacency[current][i] == 1 and not self.vertex[i].Hit:
+                self.vertex[i].Hit = True
+                parents[i] = current
+                if i == VTo:
+                    path = [self.vertex[VTo]]
+                    step = parents[i]
+                    while step is not None:
+                        path.append(self.vertex[step])
+                        step = parents[step]
                     path.reverse()
                     return path
                 queue.append(i)
-
-        return []
+    return []
