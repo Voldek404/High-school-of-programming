@@ -76,32 +76,40 @@ class SimpleGraph:
 
         return result if result else []
 
-def BreadthFirstSearch(self, VFrom, VTo):
-    if VFrom == VTo:
-        return [self.vertex[VFrom]] if self.vertex[VFrom] else []
-    queue = []
-    parents = [None] * self.max_vertex
+    def BreadthFirstSearch(self, VFrom, VTo):
+        if (
+            not (0 <= VFrom < self.max_vertex)
+            or not (0 <= VTo < self.max_vertex)
+            or self.vertex[VFrom] is None
+            or self.vertex[VTo] is None):
+            return []
 
-    for v in self.vertex:
-        if v:
-            v.Hit = False
-    self.vertex[VFrom].Hit = True
-    queue.append(VFrom)
+        if VFrom == VTo:
+            return [self.vertex[VFrom]]
 
-    while queue:
-        current = queue.pop(0)
+        queue = []
+        parents = [None] * self.max_vertex
 
-        for i in range(self.max_vertex):
-            if self.m_adjacency[current][i] == 1 and not self.vertex[i].Hit:
-                self.vertex[i].Hit = True
-                parents[i] = current
-                if i == VTo:
-                    path = [self.vertex[VTo]]
-                    step = parents[i]
-                    while step is not None:
-                        path.append(self.vertex[step])
-                        step = parents[step]
-                    path.reverse()
-                    return path
-                queue.append(i)
-    return []
+        for v in self.vertex:
+            if v:
+                v.Hit = False
+        self.vertex[VFrom].Hit = True
+        queue.append(VFrom)
+
+        while queue:
+            current = queue.pop(0)
+
+            for i in range(self.max_vertex):
+                if self.m_adjacency[current][i] == 1 and not self.vertex[i].Hit:
+                    self.vertex[i].Hit = True
+                    parents[i] = current
+                    if i == VTo:
+                        path = [self.vertex[VTo]]
+                        step = parents[i]
+                        while step is not None:
+                            path.append(self.vertex[step])
+                            step = parents[step]
+                        path.reverse()
+                        return path
+                    queue.append(i)
+        return []
