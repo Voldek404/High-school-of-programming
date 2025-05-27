@@ -74,5 +74,3 @@ class SimpleGraph:
                 weak_vertices.append(current)
 
         return weak_vertices
-
-
