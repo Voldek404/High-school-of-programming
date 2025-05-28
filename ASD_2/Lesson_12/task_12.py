@@ -71,6 +71,6 @@ class SimpleGraph:
         for current in range(self.max_vertex):
             WeakVerticesHelper(current)
             if not self.vertex[current].InTriangle:
-                weak_vertices.append(current)
+                weak_vertices.append(self.vertex[current])
 
         return weak_vertices
