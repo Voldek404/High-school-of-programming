@@ -8,6 +8,17 @@
 /build/
 /out/
 
+# Virtualenv
+venv/
+.env
+
+# Django
+*.sqlite3
+*.log
+*.pot
+*.pyc
+db.sqlite3
+
 # Игнорируем конфигурационные файлы IDE
 .idea/
 /.vscode/
