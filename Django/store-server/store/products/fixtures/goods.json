@@ -1,0 +1,1 @@
+[{"model": "products.product", "pk": 1, "fields": {"name": "Синяя куртка The North Face", "description": "Гладкая ткань", "price": "6300.00", "quantity": 0, "image": "products_images/maxresdefault.jpg", "category": 1}}]
