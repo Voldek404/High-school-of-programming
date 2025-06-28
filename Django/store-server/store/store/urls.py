@@ -21,12 +21,14 @@ from django.conf import settings
 
 from products.views import index
 from products.views import products
+from users.views import login, registration
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index'),
     path('products/', include('products.urls', namespace='products')),
+    path('users/', include('users.urls', namespace='users')),
 ]
 
 if settings.DEBUG:
