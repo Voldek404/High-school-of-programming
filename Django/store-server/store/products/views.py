@@ -1,7 +1,5 @@
-from importlib.resources import contents
 
 from django.shortcuts import render
-
 from products.models import ProductCategory, Product
 
 # Create your views here.
