@@ -5,6 +5,10 @@ from django.contrib import auth, messages
 from users.models import User
 from users.forms import UserLoginForm, UserRegistrationForm, UserProfileForm
 
+
+from products.models import Basket
+
+
 def login(request):
     if request.method == "POST":
         form = UserLoginForm(data = request.POST)
@@ -43,7 +47,12 @@ def profile(request):
             print(form.errors)
     else:
         form = UserProfileForm(instance=request.user)
-    context = {'title': 'Store - Профиль', 'form': form }
+    baskets = Basket.objects.filter(user=request.user)
+
+    context = {'title': 'Store - Профиль',
+               'form': form,
+               'baskets': Basket.objects.filter(user=request.user),
+               }
     return render(request, 'users/profile.html', context)
 
 def logout(request):
