@@ -1,0 +1,9 @@
+[flake8]
+
+exclude =
+    site-packages,
+    lib,
+    migrations
+
+
+max-line-length = 120
