@@ -9,8 +9,23 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import environ
 
 from pathlib import Path
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool),
+    SECRET_KEY=(str),
+    DOMAIN_NAME=(str),
+    REDIS_HOST=(str),
+    REDIS_PORT=(str),
+    DATABASE_NAME=(str),
+    DATABASE_USER=(str),
+    DATABASE_PASSWORD=(str),
+    DATABASE_HOST=(str),
+    DATABASE_PORT=(str),
+)
 
 from django.conf.global_settings import LOGIN_URL
 
@@ -18,17 +33,21 @@ from django.conf.global_settings import LOGIN_URL
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+environ.Env.read_env(BASE_DIR / ".env")
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%tw^tee&i*@xlqr_yz4r)-e*sa@&)g8e9i$bi+98^d_5++^z%+'
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = []
 
+DOMAIN_NAME = env("DOMAIN_NAME")
+INSTALLED_APPS = []
 
 # Application definition
 
@@ -89,6 +108,9 @@ INTERNAL_IPS = [
     'localhost',
 ]
 
+REDIS_HOST = env("REDIS_HOST")
+REDIS_PORT = env("REDIS_PORT")
+
 CACHES = {
     # a cache alias or name. In this case, we use "default" as the alias.
     'default': {
@@ -96,7 +118,7 @@ CACHES = {
         'BACKEND': 'django_redis.cache.RedisCache',
 
         # LOCATION parameter gives a unique name or identifier to this cache instance.
-        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}/1',
         'OPTIONS': {'CLIENT_CLASS': 'django_redis.client.DefaultClient'},
     }
 }
