@@ -28,3 +28,5 @@ db.sqlite3
 
 # Не игнорируем важные файлы
 !important.txt
+
+*.tar.gz
