@@ -14,21 +14,20 @@ class BoundedStack<T>
   public const int PEEK_OK = 1;
   public const int PEEK_ERR = 2;
 
-  public void Stack(size)// конструктор
-    boundary_limit = size if size else 32
-    clear()
+  // конструктор
+  // постусловие - создается пустой стек с заданным размером, если размер не задан размер по умолчанию 32
+  public BoundedStack(int max_size)
 
+  // команды
+  // предусловие - размер текущего стека меньше ограничительного размера
+  // постусловие - в стек добавлен новый элемент
   public void push(T value)
-    assert size < boundary limit
-    stack.Append(value)
 
+  // предусловие - размер текущего стека больше нуля
+  // постусловие - размер стека уменьшился на 1
   public void pop()
-    if size() > 0
-      stack.RemoveAt(-1)
-      pop_status = POP_OK
-    else
-      pop_status = POP_ERR
 
+  // постусловие - из стека удалятся все значения
   public void clear()
     stack = [ ] // пустой список/стек
 
@@ -37,20 +36,13 @@ class BoundedStack<T>
     pop_status = POP_NIL
 
   public T peek()
-    if size() > 0
-      result = stack[-1]
-      peek_status = PEEK_OK
-    else
-      result = 0
-      peek_status = PEEK_ERR
-    return result
+
 
   public int size()
-    return stack.Length()
+
 
   // запросы статусов
   public int get_pop_status()
-    return pop_status
 
   public int get_peek_status()
-    return peek_status
+
