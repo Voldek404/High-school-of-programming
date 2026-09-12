@@ -1,0 +1,3 @@
+class abstract LinkedStack<T>:
+
+    public const int POP_NILpublic const int POP_NIL
