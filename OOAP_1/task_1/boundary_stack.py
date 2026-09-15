@@ -39,10 +39,10 @@ class BoundedStack<T>
 
 
   public int size()
-
+  public int max_size()
 
   // запросы статусов
   public int get_pop_status()
-
+  public int get_push_status();
   public int get_peek_status()
 
