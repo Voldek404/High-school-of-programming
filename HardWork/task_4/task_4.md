@@ -488,6 +488,9 @@ if __name__ == "__main__":
 
 ## Продолжение анализа дизайна пайплайна
 
+
+Содержательные замечания в разделах 6–8 относятся к исходным версиям функций. В подразделах «После внесенных изменений» теперь приведены исправленные версии. Предложения, не вошедшие в эти версии, остаются направлениями дальнейшей работы.
+
 ### 6) def translate_cyrillic(text)
 
 Функция переводит русскоязычные слова, записанные кириллицей, на узбекский язык. Порядок фрагментов текста сохраняется. Числа, латиница, пробелы и знаки препинания, не предназначенные для перевода, должны оставаться без изменений.
@@ -609,6 +612,115 @@ timings["translate_cyrillic"] = time.time() - start
 
 Также нужно явно различать перевод с русского на узбекский и транслитерацию кириллицы. Это разные задачи, хотя обе могут менять алфавит результата.
 
+
+#### После внесенных изменений
+
+В качестве улучшения заменена токенизация с последующей сборкой текста на поиск только переводимых слов. Все промежутки между найденными словами сохраняются как есть, поэтому цифры и неподдерживаемые алфавиты больше не теряются.
+
+Кэш хранит базовый перевод по языковой паре и слову в нижнем регистре. Статистика учитывает каждое успешно обработанное вхождение, включая использование кэша. Сбой внешнего перевода сохраняет исходное слово.
+
+Для смешанного регистра оставлен базовый перевод. Для начальной заглавной буквы сохранено прежнее применение `.title()`, то есть это согласованное оформление регистра, а не буквальное восстановление каждой позиции заглавной буквы.
+
+Ниже приведены настройки, дополнительные импорты и исправленная функция. Существующие импорты `GoogleTranslator`, `tqdm` и функции первой части должны остаться в скрипте. Если глобальные счётчики уже созданы выше, повторять их инициализацию не нужно.
+
+```python
+"""Обновлённая вторая часть исходного скрипта.
+
+Функции первой части остаются в том же модуле. Перед запуском нужны
+их словари и GoogleTranslator из deep_translator. Для метрик: jiwer==4.0.0.
+"""
+import json
+import os
+import re
+import tempfile
+import time
+from collections import Counter
+from pathlib import Path
+
+from jiwer import process_words
+
+# Настройки запуска
+TRANSLATE_ENABLED = False
+MISMATCH_WER_THRESHOLD = 0.1
+
+# Если эти объекты уже созданы выше, повторно создавать их не нужно.
+translation_cache = {}
+stats_cyr = {'file': {}}
+stats_num = {'file': {}}
+timings = {}
+mismatch_counter = Counter()
+insertion_counter = Counter()
+
+
+def translate_cyrillic(text):
+    """Перевод русских слов без потери чисел и остальных фрагментов.
+
+    upper/title/lower оформляются как прежде; mixed получает базовый перевод.
+    Ошибка сервиса или непригодный ответ сохраняют исходное слово.
+    """
+    if not isinstance(text, str):
+        raise ValueError('На входе должна быть строка')
+
+    start = time.perf_counter()
+    translated_tokens = []
+    position = 0
+    source_language = 'ru'
+    target_language = 'uz'
+
+    # Не выделяем русскую часть смешанного слова или идентификатора.
+    words = re.finditer(r'(?<!\w)[А-Яа-яЁё]+(?!\w)', text)
+
+    for match in words:
+        # Сохраняем всё между переводимыми словами, включая цифры.
+        translated_tokens.append(text[position:match.start()])
+        token = match.group()
+        cache_key = (source_language, target_language, token.lower())
+
+        if cache_key in translation_cache:
+            translated = translation_cache[cache_key]
+        else:
+            try:
+                translated = GoogleTranslator(
+                    source=source_language,
+                    target=target_language,
+                ).translate(token.lower())
+
+                if not isinstance(translated, str) or not translated.strip():
+                    raise ValueError('Переводчик вернул пустой или нестроковый ответ')
+            except Exception as error:
+                # Сбой одного запроса не удаляет исходное слово.
+                print(f"⚠️ Ошибка перевода '{token}': {error}")
+                translated_tokens.append(token)
+                position = match.end()
+                continue
+
+            translation_cache[cache_key] = translated
+            print(f"✅ Переведено: '{token}' -> '{translated}'")
+
+        # Применяем оформление регистра после чтения базового перевода.
+        if token.isupper():
+            translated = translated.upper()
+        elif token.istitle():
+            translated = translated.title()
+        elif token.islower():
+            translated = translated.lower()
+
+        translated_tokens.append(translated)
+        position = match.end()
+
+        # Считаем каждое успешно обработанное вхождение, включая кэш.
+        word_stats = stats_cyr.setdefault('file', {})
+        normalized_word = token.lower()
+        word_stats[normalized_word] = word_stats.get(normalized_word, 0) + 1
+
+    # Сохраняем хвост строки, даже если переводимых слов не было.
+    translated_tokens.append(text[position:])
+    result = ''.join(translated_tokens)
+    elapsed = time.perf_counter() - start
+    timings['translate_cyrillic'] = timings.get('translate_cyrillic', 0) + elapsed
+    return result
+```
+
 ### 7) def process_text_pipeline(text_orig)
 
 Функция организует обработку одной транскрипции. Она последовательно вызывает включённые этапы и возвращает обработанный текст.
@@ -680,6 +792,28 @@ return fix_punctuation_spacing(processed)
 Функцию целесообразно оставить небольшим оркестратором. Основное улучшение заключается в согласовании контрактов этапов, явной конфигурации и устранении дублирования.
 
 Само наличие нескольких последовательных вызовов не требует дополнительной системы классов.
+
+
+#### После внесенных изменений
+
+Последовательность основных этапов сохранена. Перевод включается явным параметром; по умолчанию, как и раньше, он отключён. Дополнительная финальная очистка удалена, поскольку это уже обязанность `fix_punctuation_spacing`.
+
+```python
+def process_text_pipeline(text_orig, translate_enabled=False):
+    """Обработка одной строки; перевод включается явно."""
+    if not isinstance(text_orig, str):
+        raise ValueError('Транскрипция должна быть строкой')
+
+    processed = normalize_apostrophes(text_orig)
+    processed = replace_numbers(processed)
+
+    if translate_enabled:
+        processed = translate_cyrillic(processed)
+
+    # Эта функция уже схлопывает пробелы и очищает края текста.
+    processed = fix_punctuation_spacing(processed)
+    return processed
+```
 
 ### 8) def main()
 
@@ -806,6 +940,195 @@ with open(
 
 Переработку следует начинать с определения этих правил. Простое разбиение большой функции на несколько маленьких не устранит неоднозначность выбора эталона, статистики и поведения при сбоях.
 
+
+#### После внесенных изменений
+
+В исправленной версии сохранена организация через обычные функции и явные циклы. Не вводились дополнительные классы или универсальная система стадий.
+
+При этом явно приняты следующие правила:
+
+- Пустая ручная правка является допустимым эталоном; `null` или отсутствие правки означает переход к `replaced_text`.
+- Запись без эталона обрабатывается, но не участвует в оценке. Это отличается от допустимого пустого эталона.
+- Некорректная структура JSON или нестроковая транскрипция останавливает прогон до обработки и перезаписи файлов. Это выбранная политика, а не исправление без изменения поведения.
+- Кэш может сохраняться между запусками, статистика начинается заново.
+- Ошибки слов считаются по выравниванию: замены и удаления — по словам эталона, вставки — отдельно по словам результата.
+- Среднее индивидуальных WER и WER набора выводятся с разными названиями.
+- Каждый выходной файл сначала полностью записывается во временный файл, затем заменяет целевой. Два файла по-прежнему не образуют общую транзакцию.
+
+Для метрики используется `jiwer==4.0.0`, поддерживающий пустые эталоны. Для отдельного пустого эталона библиотека определяет WER по числу вставленных слов; это специальное соглашение, а не обычное деление на количество слов. Если все эталоны пусты, код не выводит обычный корпусный WER с нулевым знаменателем.
+
+Использование `process_words`, выравнивания и пустых эталонов сверено с документацией проекта: [JiWER](https://github.com/jitsi/jiwer), [AlignmentChunk](https://jitsi.github.io/jiwer/reference/process/).
+
+Формат диагностического JSON уточнён: вместо поля `edited_replaced_text`, в которое раньше попадал любой выбранный эталон, сохраняются `reference_field` и `reference_text`. Если этот файл читает другой скрипт, его нужно согласовать с новым форматом.
+
+```python
+def save_json_atomic(data, filename):
+    """Сначала записываем временный файл, затем заменяем целевой.
+
+    Замена относится к одному файлу, а не к общей транзакции двух файлов.
+    Временный файл создаётся рядом с целевым.
+    """
+    target = Path(filename)
+    temporary_name = None
+
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode='w',
+            encoding='utf-8',
+            dir=target.parent,
+            prefix=f'.{target.name}.',
+            suffix='.tmp',
+            delete=False,
+        ) as temporary_file:
+            temporary_name = temporary_file.name
+            json.dump(data, temporary_file, ensure_ascii=False, indent=2)
+            temporary_file.flush()
+            os.fsync(temporary_file.fileno())
+
+        os.replace(temporary_name, target)
+    finally:
+        if temporary_name is not None and os.path.exists(temporary_name):
+            os.remove(temporary_name)
+
+
+def main():
+    """Обработка набора с независимой статистикой каждого запуска."""
+    start_total = time.perf_counter()
+    filename = 'corrected_text_replacements.json'
+
+    with open(filename, 'r', encoding='utf-8') as source_file:
+        data = json.load(source_file)
+
+    # Проверяем весь набор до обработки и перезаписи файлов.
+    if not isinstance(data, list):
+        raise ValueError('Ожидается список записей в JSON')
+
+    for idx, item in enumerate(data):
+        if not isinstance(item, dict):
+            raise ValueError(f'Запись {idx}: ожидается словарь')
+        if not isinstance(item.get('text'), str):
+            raise ValueError(f'Запись {idx}: поле text должно быть строкой')
+
+        for field in ['edited_replaced_text', 'replaced_text']:
+            value = item.get(field)
+            if value is not None and not isinstance(value, str):
+                raise ValueError(f'Запись {idx}: поле {field} должно быть строкой или null')
+
+    # Кэш сохраняем между запусками, статистику начинаем заново.
+    mismatch_counter.clear()
+    insertion_counter.clear()
+    timings.clear()
+    stats_cyr['file'] = {}
+    stats_num['file'] = {}
+
+    wer_list = []
+    mismatched_entries = []
+    skipped_references = 0
+    empty_references = 0
+    total_errors = 0
+    total_reference_words = 0
+
+    for idx, item in enumerate(tqdm(data, desc='Processing JSON')):
+        text_orig = item['text']
+
+        # Пустая ручная правка допустима; null означает отсутствие правки.
+        if item.get('edited_replaced_text') is not None:
+            replaced_ref = item['edited_replaced_text']
+            reference_field = 'edited_replaced_text'
+        else:
+            replaced_ref = item.get('replaced_text')
+            reference_field = 'replaced_text'
+
+        processed = process_text_pipeline(
+            text_orig,
+            translate_enabled=TRANSLATE_ENABLED,
+        )
+        item['my_replaced_text'] = processed
+
+        if replaced_ref is None:
+            skipped_references += 1
+            continue
+
+        # JiWER 4 поддерживает пустой эталон и даёт выравнивание слов.
+        comparison = process_words(replaced_ref, processed)
+        error_rate = comparison.wer
+        wer_list.append(error_rate)
+        reference_words = comparison.references[0]
+        result_words = comparison.hypotheses[0]
+
+        if not reference_words:
+            empty_references += 1
+
+        total_reference_words += len(reference_words)
+        total_errors += (
+            comparison.substitutions
+            + comparison.deletions
+            + comparison.insertions
+        )
+
+        # Считаем ошибки по выравниванию, без сдвигов от вставленных слов.
+        for chunk in comparison.alignments[0]:
+            if chunk.type in ['substitute', 'delete']:
+                for word in reference_words[chunk.ref_start_idx:chunk.ref_end_idx]:
+                    mismatch_counter[word] += 1
+            elif chunk.type == 'insert':
+                for word in result_words[chunk.hyp_start_idx:chunk.hyp_end_idx]:
+                    insertion_counter[word] += 1
+
+        if error_rate > 0 and error_rate >= MISMATCH_WER_THRESHOLD:
+            mismatched_entries.append({
+                'index': idx,
+                'id': item.get('id'),
+                'text': text_orig,
+                'reference_field': reference_field,
+                'reference_text': replaced_ref,
+                'my_replaced_text': processed,
+                'wer': error_rate,
+                'substitutions': comparison.substitutions,
+                'deletions': comparison.deletions,
+                'insertions': comparison.insertions,
+                'translate_enabled': TRANSLATE_ENABLED,
+                'mismatch_wer_threshold': MISMATCH_WER_THRESHOLD,
+            })
+
+    # Каждый файл заменяется только после успешной сериализации.
+    save_json_atomic(data, filename)
+    save_json_atomic(mismatched_entries, 'mismatched_entries.json')
+    timings['total'] = time.perf_counter() - start_total
+
+    print(f'✅ Обработка завершена, результат сохранён в {filename}')
+    print(f'📊 Записей: {len(data)}; оценено: {len(wer_list)}')
+    print(f'📊 Без эталона: {skipped_references}; пустых эталонов: {empty_references}')
+
+    if wer_list:
+        avg_wer = sum(wer_list) / len(wer_list)
+        print(f'📊 Среднее индивидуальных WER: {avg_wer:.4f}')
+
+    if total_reference_words:
+        corpus_wer = total_errors / total_reference_words
+        print(f'📊 WER набора по сумме ошибок и слов: {corpus_wer:.4f}')
+    elif wer_list:
+        print(f'📊 WER набора без слов эталона не определён; ошибок: {total_errors}')
+
+    print('📊 Замены и удаления слов эталона:')
+    for word, count in mismatch_counter.most_common(20):
+        print(f'  {word}: {count}')
+
+    print('📊 Лишние слова результата:')
+    for word, count in insertion_counter.most_common(20):
+        print(f'  {word}: {count}')
+
+    print('📊 Кириллица:', dict(stats_cyr['file']))
+    print('📊 Числа:', dict(stats_num['file']))
+    print('⏱️ Замеры времени (сек):')
+    for name, duration in timings.items():
+        print(f'  {name}: {duration:.3f}')
+
+
+if __name__ == "__main__":
+    main()
+```
+
 ## Проверки второго подхода
 
 Выполнены 18 записанных проверок на локальных тестовых данных. Одна из проверок охватывает семь примеров финальной очистки.
@@ -815,6 +1138,15 @@ with open(
 Для проверки `main` использованы временные файлы и заглушка метрики. Проверялись выбор эталона и последующие действия кода, а не корректность конкретной библиотеки WER.
 
 Рабочий датасет не запускался и не перезаписывался. Полные словари и настройки проекта не предоставлены, поэтому эти проверки не подтверждают итоговое качество преобразования на реальных данных.
+
+
+### Проверки исправленного кода второй части
+
+После реализации правок дополнительно выполнены **20 тестов**, все прошли. Для перевода использован двойник, сетевых запросов не было. Для метрик использована настоящая библиотека **JiWER 4.0.0**, а не заглушка.
+
+Проверены: сохранность цифр, пробелов, пунктуации и неподдерживаемых слов; оформление регистра; общий кэш для разных регистров; учёт попаданий в кэш; сохранение исходного слова при ошибке или непригодном ответе; переключение перевода; порядок стадий; совместная работа с преобразованием чисел первой части; выравнивание вставок, удалений и замен; пустые и отсутствующие эталоны; сброс статистики; различие двух способов усреднения WER; сохранность старого файла при ошибке сериализации и отказ от записи при некорректном входе.
+
+Тесты выполнялись во временных папках. Реальный датасет и рабочие файлы не запускались. Исправления второй части не устраняют оставшиеся проблемы первой части, включая правила суффиксов и замены повторных вхождений. Внешний перевод по-прежнему требует проверки качества на реальных данных.
 
 ## Уточнения к первой части
 
@@ -875,3 +1207,9 @@ with open(
 Следующий этап — закрепить спорные правила и сквозные гарантии, после чего исправлять подтверждённые дефекты и разделять обязанности компонентов.
 
 Результат двух подходов — восстановленное описание текущего устройства и основа для явной спецификации. Полная корректность и завершённость дизайна пока не подтверждены.
+
+### Состояние после реализации правок второй части
+
+Подтверждённая потеря цифровых токенов в переводчике устранена. Реализованы явное включение перевода, нормализованный ключ кэша, учёт обработанных вхождений, независимая статистика прогонов, выравнивание слов и замена каждого выходного файла через временный файл.
+
+Некоторые вопросы теперь получили явное решение в коде: пустой эталон допустим, а структурно некорректный набор отклоняется до записи. Эти решения следует сверить с требованиями к рабочему датасету. Поэтому вывод о частичной полноте общей спецификации остаётся в силе: исправлена и проверена вторая часть, но весь пайплайн ещё не верифицирован и не проверен на полном рабочем наборе.
