@@ -1,7 +1,6 @@
 # Родительский класс единицы электротехнического оборудования с наследуемым методом 
 # сигнализации перегрузки
 class Transformer:
-
     def check_overload(self, value, limit):
         if value > limit:
             print("Перегрузка!")
