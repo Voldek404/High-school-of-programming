@@ -6,7 +6,20 @@
 электроэнергии. Каждая реализация занимает меньше ста строк:
 
 - `energy.py` — 40 строк;
+
+https://github.com/Voldek404/High-school-of-programming/blob/main/HardWork/task_6/energy.py
+
+ - Тесты
+
+https://github.com/Voldek404/High-school-of-programming/blob/main/HardWork/task_6/tests/test_energy.py
+
 - `voltage.py` — 33 строки.
+
+https://github.com/Voldek404/High-school-of-programming/blob/main/HardWork/task_6/voltage.py
+
+- Тесты
+
+https://github.com/Voldek404/High-school-of-programming/blob/main/HardWork/task_6/tests/test_voltage.py
 
 
 ## 2. Первая задача: расчёт энергии по получасовкам
