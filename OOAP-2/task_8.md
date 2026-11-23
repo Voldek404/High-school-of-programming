@@ -1,23 +1,32 @@
 from typing import Generic, TypeVar
 
 
+```python
 class Transformer:
+    """Общий тип трансформатора."""
+
     def __init__(self, name: str):
         self.name = name
 
 
 class CurrentTransformer(Transformer):
+    """Трансформатор тока."""
+
     def measure_current(self) -> float:
         return 5.0
 
 
 class VoltageTransformer(Transformer):
+    """Трансформатор напряжения."""
+
     def measure_voltage(self) -> float:
         return 100.0
+```
 
 
 # КОВАРИАНТНОСТЬ:
 # producer создает и возвращает.
+```python
 T_co = TypeVar(
     "T_co",
     bound=Transformer,
@@ -45,10 +54,12 @@ provider = CurrentTransformerProvider()
 transformer = provider.get()
 
 print(transformer.name)
+```
 
 
 # КОНТРАВАРИАНТНОСТЬ:
 # consumer принимает и обрабатывает значение.
+```python
 T_contra = TypeVar(
     "T_contra",
     bound=Transformer,
@@ -76,6 +87,7 @@ inspector = GeneralTransformerInspector()
 current_transformer = CurrentTransformer("ТТ-200")
 
 inspector.inspect(current_transformer)
+```
 
 # Ассоциативно продюссер - создает и возвращает объекты
 # Консьюмер принимает и обрабатывает
